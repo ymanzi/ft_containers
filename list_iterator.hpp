@@ -41,22 +41,22 @@ namespace List
 			iterator&	operator=  (const iterator<T>& oth) { _list = oth._list; return (*this);}
 			bool		operator== (const iterator<T>& oth) const {return (_list == oth._list);}
 			bool		operator!= (const iterator<T>& oth) const {return (_list != oth._list);}
-			iterator&	operator++ () { if (_list->next == 0) this->begin(); else _list = _list->next; return (*this);} // equal to ++var
-			iterator&	operator++ (int) { iterator tmp(*this); operator++(); return tmp;} // the (int) means that ++ is after the var // equal to var++ 
+			iterator&	operator++ () { if (_list->next == nullptr) return (*this); _list = _list->next; return (*this);} // equal to ++var
+			iterator&	operator++ (int) {iterator<T>& tmp(*this); operator++(); return (tmp);} // the (int) means that ++ is after the var // equal to var++ 
 
 	};
 
 	template < class T >
-	class r_iterator: public iterator
+	class r_iterator: public iterator<T>
 	{
 		public:
-			r_iterator(void): iterator() {}
-			r_iterator(void* p_list): iterator(p_list) {} // compilation error if the cast fails
-			r_iterator(const r_iterator<T>& oth): _list(oth._list) {}
+			r_iterator(void): iterator<T>() {}
+			r_iterator(void* p_list): iterator<T>(p_list) {} // compilation error if the cast fails
+			r_iterator(const r_iterator<T>& oth): iterator<T>() { this->_list = oth._list;}
 			virtual ~r_iterator(void) {}
 
-			iterator&	operator++ () { if (_list->prev == 0) this->end(); else _list = _list->prev; return (*this);} // equal to ++var
-			iterator&	operator++ (int) { iterator tmp(*this); operator++(); return tmp;} // the (int) means that ++ is after the var // equal to var++ 
+			r_iterator&	operator++ () { if (this->_list->prev == 0) this->end(); else this->_list = this->_list->prev; return (*this);} // equal to ++var
+			r_iterator&	operator++ (int) { r_iterator tmp(*this); operator++(); return tmp;} // the (int) means that ++ is after the var // equal to var++ 
 	};
 }
 
