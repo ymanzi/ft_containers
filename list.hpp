@@ -26,6 +26,8 @@ namespace ft
 
 			void	init_list(void)
 			{ 
+				_size = 0;
+
 				_list = new t_list;
 				_list->prev = nullptr;
 				_list->value = T();
@@ -107,9 +109,19 @@ namespace ft
 
 			typedef List::iterator<value_type>			iterator;
 			typedef const List::iterator<value_type>	const_iterator;
-			typedef List::r_iterator<value_type>		reverse_iterator;
-			typedef const List::r_iterator<value_type>	const_reverse_iterator;
-			
+			typedef List::reverse_iterator<value_type>		reverse_iterator;
+			typedef const List::reverse_iterator<value_type>	const_reverse_iterator;
+			virtual ~list()
+			{
+				t_list *elem;
+				
+				while(_list)
+				{
+					elem = _list->next;
+					delete _list;
+					_list = elem;
+				}
+			}
 			
 			explicit list(void): _size(0), _list(nullptr) { init_list();} // default constructor
 			explicit list (size_type n, const value_type& val = value_type()): _size(0) { init_list(); this->insert(this->begin(), n, val); } // fill constructor
@@ -122,14 +134,19 @@ namespace ft
 				t_list	*elem;
 
 				elem = _list;
-				while (elem->next->next)
+				while (elem->next && elem->next->next)
 					elem = elem->next;
 				return (elem->value);
 			}
 			const_reference 	back() const {return (const_cast<const_reference>(back()));}
 			iterator			begin(){ return (iterator(_list));}
 			const_iterator		begin() const { return (const_iterator(_list));}
-			void 				clear() {while (_size) pop_front();}
+			void 				clear()
+			{
+				while (_size)
+					pop_front();
+			}
+
 			bool				empty() const {if (_size) return (false); return (true);}
 			iterator			end()
 			{
@@ -151,31 +168,32 @@ namespace ft
 			}
 			iterator			erase (iterator position)
 			{
-				if (position != this->end())
+				t_list	*elem = position.get_list();
+				if (elem->next)
 				{
-					iterator nxt(position);
-
-					nxt++;
-					remove(*position);
-					return (nxt);
+					t_list *nxt = elem->next;
+					this->_size--;
+					this->del_one(*elem);
+					return (iterator(nxt));
 				}
 				return (position);
 			}
 			iterator 			erase (iterator first, iterator last)
 			{
-				if (first != this->end())
+				t_list	*elem_f = (t_list*)first.get_list();
+				t_list	*elem_l = (t_list*)last.get_list();
+				t_list	*tmp;
+
+				if (elem_f->next)
 				{
-					iterator nxt(first);
-					while (first != last)
+					while (elem_f->next && elem_f != elem_l)
 					{
-						if (first == this->end())
-							first = this->begin();
-						else
-						{
-							nxt++;
-							remove(*first);
-							first = nxt;
-						}
+						tmp = elem_f->next;
+						this->_size--;
+						this->del_one(*elem_f);
+						elem_f = tmp;
+						if (elem_f->next == nullptr)
+							_list = elem_f;
 					}
 				}
 				return (last);
@@ -188,24 +206,18 @@ namespace ft
 				t_list	*elem;
 
 				n = new t_list;
-				elem = reinterpret_cast<t_list*>(position);
-				for (iterator it = this->begin(); it != this->end(); it++)
-				{
-					if (it == position)
-					{
-						_size++;
-						n->val = val;
-						n->prev = elem->prev;
-						n->next = elem;
-						if (position == this->begin())
-							this->_list = n;
-						else
-							elem->prev->next = n;
-						elem->prev = n;
-						return (iterator(n));
-					}
-				}
-				return (position);
+				elem = (t_list*)(position.get_list());
+				
+				_size++;
+				n->value = val;
+				n->prev = elem->prev;
+				n->next = elem;
+				if (elem == this->_list)
+					this->_list = n;
+				else
+					elem->prev->next = n;
+				elem->prev = n;
+				return (iterator(n));
 			}
 			void				insert (iterator position, size_type nbr, const value_type& val)	// fill
 			{
@@ -227,8 +239,10 @@ namespace ft
 				if ( *this != x)
 				{
 					list	n;
-					n.splice(n.begin(), *this);
-					n.splice(n.begin(), x);
+					if (this->size())
+						n.splice(n.begin(), *this);
+					if (x.size())
+						n.splice(n.begin(), x);
 					n.sort();
 					*this = n;
 				}
@@ -248,9 +262,8 @@ namespace ft
 			list& 				operator= (const list& oth)
 			{
 				this->clear();
-				_size = oth._size;
 				for (iterator it = oth.begin(); it != oth.end(); it++ )
-					this->push_front(*it);
+					this->push_back(*it);
 				return (*this);
 			}
 			void				pop_back()
@@ -315,27 +328,25 @@ namespace ft
 				_list->prev = n;
 				_list = n;
 			}
-			reverse_iterator	rbegin(){return (reverse_iterator(&back()));}
+			reverse_iterator	rbegin(){return (reverse_iterator(back_e()));}
 			const_reverse_iterator	rbegin() const {return (const_reverse_iterator(&back()));}
 			void				remove (const value_type& val)
 			{
-				iterator it = this->begin();
-				iterator nxt;
-				while (it != this->end())
-				{
-					nxt = it;
-					nxt++;
-					if (*it == val)
-					{
-						iterator nxt(it);
+				t_list	*tmp;
+				t_list	*elem;
 
-						nxt++;
-						this->_size--;
-						if (it == this->begin())
-							_list = reinterpret_cast<t_list *>(nxt);
-						this->del_one(reinterpret_cast<t_list *>(it));
+				elem = _list;
+				while (elem->next)
+				{
+					tmp = elem->next;
+					if (elem->value == val)
+					{
+						_size--;
+						if (elem == _list)
+							_list = tmp;
+						this->del_one(*elem);
 					}
-					it = nxt;
+					elem = tmp;
 				}
 			}
 			template <class Predicate>
@@ -358,13 +369,13 @@ namespace ft
 					elem = tmp;
 				}
 			}
-			reverse_iterator 	rend(){ return reverse_iterator(this->end()) ;}
+			reverse_iterator 	rend(){ return reverse_iterator(back_e()->next);}
 			const_reverse_iterator rend() const { return const_reverse_iterator(this->end()) ;}
 			void 				resize (size_type n, value_type val = value_type())
 			{
 				size_t		i = 0;
 				iterator	i_end = this->end();
-				for (iterator it = this->begin(); it != i_end; it++)
+				for (iterator it = this->begin(); it != this->end(); it++)
 				{
 					i++;
 					if (i > n)
@@ -381,10 +392,11 @@ namespace ft
 			}
 			void				reverse()
 			{
-				list<T> elem(*this);
+				list elem(*this);
 
 				this->clear();
-				this->insert(this->end(), elem.rbegin(), elem.rend());
+				for (iterator it = elem.begin(); it != elem.end(); it++)
+					this->push_front(*it);
 			}
 			size_type			size() const {return _size;}
 			void				sort()
@@ -392,20 +404,17 @@ namespace ft
 				iterator	min;
 				T			tmp;
 
-				for (iterator it1 = this->begin(); it1 != this->end(); it1++)
+				for (List::iterator<T> it1 = this->begin(); it1 != this->end(); ++it1)
 				{
 					min = it1;
-					for (iterator it2 = it1; it2 != this->end(); it2++)
+					for (List::iterator<T> it2(it1); it2 != this->end(); ++it2)
 					{
-						if (min > it2)
+						if (*min > *it2)
 							min = it2;
 					}
-					if (it1 > min)
-					{
-						tmp = *it1;
-						*it1 = *min;
-						*min = tmp;
-					}
+					tmp = *it1;
+					*it1 = *min;
+					*min = tmp;
 				}
 			}
 			template <class Compare>
@@ -453,7 +462,7 @@ namespace ft
 					}
 				}
 			} 
-			void				swap (list& x) {*this = x;}
+			void				swap (list& x) {list<T> n(*this);   *this = x; x = n;}
 			void				unique()
 			{
 				t_list		*tmp;
@@ -474,7 +483,7 @@ namespace ft
 						_size--;
 						if (elem == _list)
 							_list = tmp;
-						this->del_one(elem);
+						this->del_one(*elem);
 						elem = tmp;
 					}
 					if (set)
@@ -502,7 +511,7 @@ namespace ft
 						_size--;
 						if (elem == _list)
 							_list = tmp;
-						this->del_one(elem);
+						this->del_one(*elem);
 						elem = tmp;
 					}
 					if (set)
@@ -513,7 +522,7 @@ namespace ft
 
 	//relational operators
 	template <class T>
-	bool operator== (const list<T>& lhs, const list<T>& rhs)
+	bool	operator== (const list<T>& lhs, const list<T>& rhs)
 	{
 		List::iterator<T>	it_l = lhs.begin();
 		List::iterator<T>	it_r = rhs.begin();
@@ -531,34 +540,37 @@ namespace ft
 	}
 
 	template <class T>
-	bool operator!= (const list<T>& lhs, const list<T>& rhs)
+	bool	operator!= (const list<T>& lhs, const list<T>& rhs)
 	{
 		return (!(lhs == rhs));
 	}
 
 	template <class T>
-	bool operator< (const list<T>& lhs, const list<T>& rhs)
+	bool	operator< (const list<T>& lhs, const list<T>& rhs)
 	{
 		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T>
-	bool operator<= (const list<T>& lhs, const list<T>& rhs)
+	bool	operator<= (const list<T>& lhs, const list<T>& rhs)
 	{
 		return (!(rhs < lhs));
 	}
 
 	template <class T>
-	bool operator> (const list<T>& lhs, const list<T>& rhs)
+	bool	operator> (const list<T>& lhs, const list<T>& rhs)
 	{
 		return (rhs < lhs);
 	}
 
 	template <class T>
-	bool operator>= (const list<T>& lhs, const list<T>& rhs)
+	bool	operator>= (const list<T>& lhs, const list<T>& rhs)
 	{
 		return (!(lhs < rhs));
 	}
+
+	template <class T>
+	void	swap (list<T>& x, list<T>& y) {x.swap(y);}
 }
 
 #	endif
