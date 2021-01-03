@@ -78,14 +78,14 @@ namespace ft
 			{
 				t_list	*tmp;
 
-				tmp = elem.next->prev;
+				tmp = &elem;
 				if (elem.prev)
 				{
 					elem.next->prev = elem.prev;
 					elem.prev->next = elem.next;
 				}
 				else
-					elem.next->prev = nullptr;
+					elem.next->prev = elem.prev;
 				delete	tmp;
 			}
 		
@@ -168,11 +168,13 @@ namespace ft
 			}
 			iterator			erase (iterator position)
 			{
-				t_list	*elem = position.get_list();
+				t_list	*elem = (t_list*)(position.get_list());
 				if (elem->next)
 				{
 					t_list *nxt = elem->next;
 					this->_size--;
+					if (elem == _list)
+						_list = nxt;
 					this->del_one(*elem);
 					return (iterator(nxt));
 				}
@@ -190,10 +192,10 @@ namespace ft
 					{
 						tmp = elem_f->next;
 						this->_size--;
+						if (elem_f == _list)
+							_list = tmp;
 						this->del_one(*elem_f);
 						elem_f = tmp;
-						if (elem_f->next == nullptr)
-							_list = elem_f;
 					}
 				}
 				return (last);
@@ -467,7 +469,7 @@ namespace ft
 			{
 				t_list		*tmp;
 				t_list		*elem;
-				value_type	val;
+				T			val;
 				bool		set;
 
 				set = true;
@@ -476,14 +478,12 @@ namespace ft
 				{
 					val = elem->value;
 					elem = elem->next;
-					while (elem->next && val == elem->value)
+					while (elem && elem->next && val == elem->value)
 					{
-						set = false;
+						iterator start(elem);
 						tmp = elem->next;
-						_size--;
-						if (elem == _list)
-							_list = tmp;
-						this->del_one(*elem);
+						erase(start);
+						set = false;
 						elem = tmp;
 					}
 					if (set)
@@ -495,7 +495,7 @@ namespace ft
 			{
 				t_list		*tmp;
 				t_list		*elem;
-				value_type	val;
+				T			val;
 				bool		set;
 
 				set = true;
@@ -506,12 +506,10 @@ namespace ft
 					elem = elem->next;
 					while (elem->next && binary_pred(elem->value, val))
 					{
-						set = false;
+						iterator start(elem);
 						tmp = elem->next;
-						_size--;
-						if (elem == _list)
-							_list = tmp;
-						this->del_one(*elem);
+						erase(start);
+						set = false;
 						elem = tmp;
 					}
 					if (set)
