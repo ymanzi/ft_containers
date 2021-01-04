@@ -37,21 +37,19 @@ namespace ft
 				}
 				while (i < n)
 					n_vec[i++] = val;
-				_size = n;
 				_max_size = n;
+				delete _vector;
 				_vector = n_vec;
 			}
 
 			size_t	get_indice(Vector::iterator<T> &position)
 			{
-				std::cout << "get_indice OOOOUUUUUIIII\n";
 				T*		ptr = (T*)(position.get_vector());
 				for (size_t i = 0; i < _size; i++)
 				{
 					if (this->_vector + i == ptr)
 						return (i);
 				}
-				std::cout << "NOOOOOOONNNNNN\n";
 				return (_size - 1);
 			}
 
@@ -183,7 +181,10 @@ namespace ft
 			}
 			void				push_back (const value_type& val)
 			{
-				insert(this->end(), val);
+				if (_size + 1 <= _max_size)
+					new_size(_size + 5);
+				this->_vector[_size] = val;
+				_size++;
 			}
 			reverse_iterator	rbegin(){if (!_size) return (reverse_iterator(_vector));  return (reverse_iterator(_vector + _size - 1));}
 			const_reverse_iterator	rbegin() const {if (!_size) return (const_reverse_iterator(_vector));  return (const_reverse_iterator(_vector + _size - 1));}

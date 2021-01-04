@@ -249,8 +249,7 @@ void t_vector(void)
 	A("empty ? ", s.empty());
 	A("size = ", s.size());
 
-	P("---------> push_back (42) (10) (5) (20) <----");
-	
+	P("---------> push_back (5) (20) <----");
 	s.push_back(5);
 	s.push_back(20);
 	s2 = s;
