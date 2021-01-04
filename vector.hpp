@@ -137,13 +137,15 @@ namespace ft
 			{
 				size_t	elem = (size_t)(get_indice(position));
 				size_t	i = 0;
-				vector	n(*this);
-				
 				if (_size + 1 >= _max_size)
 					new_size(_size + 5);
+				vector	n(*this);
 				_vector[elem] = val;
 				while (elem + i < _size)
+				{
 					_vector[elem + i + 1] = n._vector[elem + i];
+					i++;
+				}
 				_size++;
 				return (position);
 			}
@@ -194,6 +196,7 @@ namespace ft
 			void 				resize (size_type n, value_type val = value_type())
 			{
 				new_size(n, val);
+				_size = n;
 			}
 			size_type			size() const {return _size;}
 			void				swap (vector& x) {vector<T> n(*this);   *this = x; x = n;}
