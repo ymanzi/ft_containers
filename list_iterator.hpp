@@ -50,10 +50,28 @@ namespace List
 					_list = _list->next;
 				return (*this);
 			}
+
+
 			iterator	operator++ (int) // the (int) means that ++ is after the var // equal to var++ 
 			{
 				iterator<T> tmp(*this);
 				operator++();
+				return (tmp);
+			} 
+
+			iterator&	operator-- () // equal to --var
+			{
+				if (_list->prev == nullptr)
+					this->end();
+				else
+					_list = _list->prev;
+				return (*this);
+			}
+
+			iterator	operator-- (int) // equal to var-- 
+			{
+				iterator<T> tmp(*this);
+				operator--();
 				return (tmp);
 			} 
 	};
@@ -67,7 +85,9 @@ namespace List
 			reverse_iterator(const reverse_iterator<T>& oth): iterator<T>() { this->_list = oth._list;}
 			virtual ~reverse_iterator(void) {}
 			reverse_iterator&	operator++ () { if (this->_list->prev == 0) this->end(); else this->_list = this->_list->prev; return (*this);} // equal to ++var
-			reverse_iterator	operator++ (int) { reverse_iterator<T> tmp(*this); operator++(); return tmp;} // the (int) means that ++ is after the var // equal to var++ 
+			reverse_iterator	operator++ (int) { reverse_iterator<T> tmp(*this); operator++(); return tmp;} // the (int) means that ++ is after the var // equal to var++
+			reverse_iterator&	operator-- () { if (this->_list->next == 0) this->begin(); else this->_list = this->_list->next; return (*this);} // equal to --var
+			reverse_iterator	operator-- (int) { reverse_iterator<T> tmp(*this); operator--(); return tmp;} // equal to var--
 	};
 }
 

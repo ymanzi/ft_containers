@@ -129,6 +129,14 @@ namespace ft
 			list (InputIterator first, InputIterator last): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
 			list (const list& x): _size(0) { init_list(); *this = x;} // Copy constructor
 
+			template <class InputIterator>
+  			void 				assign (InputIterator first, InputIterator last) // range
+			{
+				this->clear();
+				this->insert(this->begin(), first, last);
+			}
+
+			void assign (size_type n, const value_type& val) {this->clear(); this->insert(this->begin(), n, val);} //Fill
 			reference 			back()
 			{
 				t_list	*elem;
