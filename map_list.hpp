@@ -142,7 +142,7 @@ namespace ft
 				return  std::pair<const_iterator, const_iterator>(it, it2);
 			}
 
-			size_type erase (const key_type& k)
+			size_type	erase (const key_type& k)
 			{
 				t_map	*elem = _map;
 				t_map	*prev = nullptr;
@@ -172,7 +172,7 @@ namespace ft
 				return (0);
 			}
 
-			void			erase (iterator it)
+			void		erase (iterator it)
 			{
 				this->erase(it->value.first);
 			}
@@ -187,41 +187,122 @@ namespace ft
 					first = next;
 				}
 			}
-			reference			front() {return (_map->value);}
-			const_reference		front() const {return (const_cast<const_reference>(front()));}
-			iterator			insert (iterator position, const value_type& val)	// single element
+
+			iterator	find (const key_type& k)
+			{
+				for (iterator it = this->begin(); it != this->end(); it++)
+				{
+					if (it->value.first == k)
+						return (it);
+				}
+				return (this->end());
+			}
+
+			const_iterator find (const key_type& k) const
+			{
+				for (iterator it = this->begin(); it != this->end(); it++)
+				{
+					if (it->value.first == k)
+						return (const_iterator(it));
+				}
+				return (const_iterator(this->end()));
+			}
+
+			iterator		insert (iterator position, const value_type& val)	// single element
 			{
 				t_map	*n;
-				t_map	*elem;
-
-				n = new t_map;
-				elem = (t_map*)(position.get_map());
+				t_map	*prev = nullptr;
+				t_map	*next;
+				t_map	*elem = this->_map;
+				(void)position;
 				
-				_size++;
-				n->value = val;
-				n->prev = elem->prev;
-				n->next = elem;
-				if (elem == this->_map)
-					this->_map = n;
+				while (elem->next && key_compare(val, elem->value.first))
+				{
+					prev = elem;
+					elem = elem->next;
+				}
+				if (key_compare(val, elem->value.first) == key_compare(elem->value.first, val))
+					return iterator(elem);
 				else
-					elem->prev->next = n;
-				elem->prev = n;
-				return (iterator(n));
+				{
+					_size++;
+					n = new t_map;
+					n->value = val;
+					elem->prev = n;
+					n->next = elem;
+					n->prev = nullptr;
+					if (prev == nullptr)
+					{
+						_map = n;
+						return (iterator(_map));
+					}
+					else
+					{
+						prev->next = n;
+						n->prev = prev;
+					}
+					return (iterator(n));	
+				}
 			}
-			void				insert (iterator position, size_type nbr, const value_type& val)	// fill
+
+
+			std::pair<iterator, bool>	insert (const value_type& val)	// fill
 			{
-				while (nbr--)
-					insert(position, val);
+				t_map	*n;
+				t_map	*prev = nullptr;
+				t_map	*next;
+				t_map	*elem = this->_map;
+				
+				while (elem->next && key_compare(val, elem->value.first))
+				{
+					prev = elem;
+					elem = elem->next;
+				}
+				if (elem->next && key_compare(val, elem->value.first) == key_compare(elem->value.first, val))
+					return  std::pair<iterator, bool>(iterator(elem), false);
+				else
+				{
+					_size++;
+					n = new t_map;
+					n->value = val;
+					elem->prev = n;
+					n->next = elem;
+					n->prev = nullptr;
+					if (prev == nullptr)
+						_map = n;
+					else
+					{
+						prev->next = n;
+						n->prev = prev;
+					}
+					return std::pair<iterator, bool>(iterator(n), true);	
+				}
 			}
+
 			template <class InputIterator>
-    		void 				insert (iterator position, InputIterator first, InputIterator last)  // range
+    		void 		insert (InputIterator first, InputIterator last)  // range
 			{
+				iterator it;
 				while (first != last)
 				{
-					insert(position, *first);
+					insert(it, first->second);
 					++first;
 				}
 			}
+			
+			key_compare key_comp() const
+			{
+				return key_compare;
+			}
+			
+
+
+
+
+
+
+
+
 			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(t_map) );}
 			void				merge (map& x)
 			{
@@ -255,259 +336,22 @@ namespace ft
 					this->push_back(*it);
 				return (*this);
 			}
-			void				pop_back()
-			{
-				t_map	*elem;
-
-				elem = _map;
-				if (_size == 0)
-					return;
-				else if (_size == 1)
-					this->pop_front();
-				else
-				{
-					_size--;
-					while (elem->next->next)
-						elem = elem->next;
-					elem->prev->next = elem->next;
-					elem->next->prev = elem->prev;
-					delete elem;
-				}
-			}
-			void				pop_front()
-			{
-				if (_size)
-				{
-					t_map	*elem;
-					
-					elem = _map;
-					_size--;
-					_map = elem->next;
-					elem->next->prev = nullptr;
-					delete elem;
-				}
-			}
-			void				push_back (const value_type& val)
-			{
-				t_map	*n;
-				t_map	*elem;
-
-				elem = back_e();
-				if (_size == 0)
-					push_front(val);
-				else
-				{
-					_size++;
-					n = new t_map;
-					n->next = elem->next;
-					n->value = val;
-					n->prev = elem;
-					elem->next = n;
-				}
-			}
-			void				push_front (const value_type& val)
-			{
-				t_map	*n;
-
-				_size++;
-				n = new t_map;
-				n->next = _map;
-				n->value = val;
-				n->prev = nullptr;
-				_map->prev = n;
-				_map = n;
-			}
+			
 			reverse_iterator	rbegin(){return (reverse_iterator(back_e()));}
 			const_reverse_iterator	rbegin() const {return (const_reverse_iterator(&back()));}
-			void				remove (const value_type& val)
-			{
-				t_map	*tmp;
-				t_map	*elem;
-
-				elem = _map;
-				while (elem->next)
-				{
-					tmp = elem->next;
-					if (elem->value == val)
-					{
-						_size--;
-						if (elem == _map)
-							_map = tmp;
-						this->del_one(*elem);
-					}
-					elem = tmp;
-				}
-			}
-			template <class Predicate>
-  			void 				remove_if (Predicate pred)
-			{
-				t_map	*tmp;
-				t_map	*elem;
-
-				elem = _map;
-				while (elem->next)
-				{
-					tmp = elem->next;
-					if (pred(elem->value))
-					{
-						_size--;
-						if (elem == _map)
-							_map = tmp;
-						this->del_one(elem);
-					}
-					elem = tmp;
-				}
-			}
+			
 			reverse_iterator 	rend(){ return reverse_iterator(back_e()->next);}
 			const_reverse_iterator rend() const { return const_reverse_iterator(this->end()) ;}
-			void 				resize (size_type n, value_type val = value_type())
-			{
-				size_t		i = 0;
-				iterator	i_end = this->end();
-				for (iterator it = this->begin(); it != this->end(); it++)
-				{
-					i++;
-					if (i > n)
-					{
-						this->erase(it, i_end);
-						return ;
-					}
-				}
-				if (n > i)
-				{
-					n -= i;
-					insert(i_end, n, val);
-				}
-			}
-			void				reverse()
-			{
-				map elem(*this);
-
-				this->clear();
-				for (iterator it = elem.begin(); it != elem.end(); it++)
-					this->push_front(*it);
-			}
+			
 			size_type			size() const {return _size;}
-			void				sort()
-			{
-				iterator	min;
-				T			tmp;
-
-				for (Map::iterator<T> it1 = this->begin(); it1 != this->end(); ++it1)
-				{
-					min = it1;
-					for (Map::iterator<T> it2(it1); it2 != this->end(); ++it2)
-					{
-						if (*min > *it2)
-							min = it2;
-					}
-					tmp = *it1;
-					*it1 = *min;
-					*min = tmp;
-				}
-			}
-			template <class Compare>
-  			void				sort (Compare comp)
-			{
-				iterator	min;
-				T			tmp;
-
-				for (iterator it1 = this->begin(); it1 != this->end(); it1++)
-				{
-					min = it1;
-					for (iterator it2 = it1; it2 != this->end(); it2++)
-					{
-						if (comp(*it2, *min))
-							min = it2;
-					}
-					if (comp(*min, *it1))
-					{
-						tmp = *it1;
-						*it1 = *min;
-						*min = tmp;
-					}
-				}
-			}
-			void				splice (iterator position, map& x) { insert(position, x.begin(), x.end());} //entire map
-			void 				splice (iterator position, map& x, iterator i) // single element
-			{
-				for (iterator it = x.begin(); it != x.end(); it++)
-				{
-					if (it == i)
-					{
-						insert(position, *i);
-						return ;
-					}
-				}
-			} 
-			void				splice (iterator position, map& x, iterator first, iterator last) // element range
-			{
-				for (iterator it = x.begin(); it != x.end(); it++)
-				{
-					if (it == first)
-					{
-						insert(position, first, last);
-						return ;
-					}
-				}
-			} 
+			
 			void				swap (map& x) {map<T> n(*this);   *this = x; x = n;}
-			void				unique()
-			{
-				t_map		*tmp;
-				t_map		*elem;
-				T			val;
-				bool		set;
-
-				set = true;
-				elem = _map;
-				while (elem->next)
-				{
-					val = elem->value;
-					elem = elem->next;
-					while (elem && elem->next && val == elem->value)
-					{
-						iterator start(elem);
-						tmp = elem->next;
-						erase(start);
-						set = false;
-						elem = tmp;
-					}
-					if (set)
-						elem = elem->next;
-				}
-			}
-			template <class BinaryPredicate>
-  			void				unique (BinaryPredicate binary_pred)
-			{
-				t_map		*tmp;
-				t_map		*elem;
-				T			val;
-				bool		set;
-
-				set = true;
-				elem = _map;
-				while (elem->next)
-				{
-					val = elem->value;
-					elem = elem->next;
-					while (elem->next && binary_pred(elem->value, val))
-					{
-						iterator start(elem);
-						tmp = elem->next;
-						erase(start);
-						set = false;
-						elem = tmp;
-					}
-					if (set)
-						elem = elem->next;
-				}
-			}
+			
 	};
 
 	//relational operators
-	template <class T>
-	bool	operator== (const map<T>& lhs, const map<T>& rhs)
+	template < class Key, class T>
+	bool	operator== (const map<Key, T>& lhs, const map<Key, T>& rhs)
 	{
 		Map::iterator<T>	it_l = lhs.begin();
 		Map::iterator<T>	it_r = rhs.begin();
@@ -524,38 +368,38 @@ namespace ft
 		return (true);
 	}
 
-	template <class T>
-	bool	operator!= (const map<T>& lhs, const map<T>& rhs)
+	template < class Key, class T>
+	bool	operator!= (const map<Key, T>& lhs, const map<Key, T>& rhs)
 	{
 		return (!(lhs == rhs));
 	}
 
-	template <class T>
-	bool	operator< (const map<T>& lhs, const map<T>& rhs)
+	template < class Key, class T>
+	bool	operator< (const map<Key, T>& lhs, const map<Key, T>& rhs)
 	{
 		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
-	template <class T>
-	bool	operator<= (const map<T>& lhs, const map<T>& rhs)
+	template < class Key, class T>
+	bool	operator<= (const map<Key, T>& lhs, const map<Key, T>& rhs)
 	{
 		return (!(rhs < lhs));
 	}
 
-	template <class T>
-	bool	operator> (const map<T>& lhs, const map<T>& rhs)
+	template < class Key, class T>
+	bool	operator> (const map<Key, T>& lhs, const map<Key, T>& rhs)
 	{
 		return (rhs < lhs);
 	}
 
-	template <class T>
-	bool	operator>= (const map<T>& lhs, const map<T>& rhs)
+	template < class Key, class T>
+	bool	operator>= (const map<Key, T>& lhs, const map<Key, T>& rhs)
 	{
 		return (!(lhs < rhs));
 	}
 
-	template <class T>
-	void	swap (map<T>& x, map<T>& y) {x.swap(y);}
+	template < class Key, class T>
+	void	swap (map<Key, T>& x, map<Key, T>& y) {x.swap(y);}
 }
 
 #	endif

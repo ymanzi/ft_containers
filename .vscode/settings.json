@@ -68,6 +68,7 @@
 		"iomanip": "cpp",
 		"map": "cpp",
 		"queue": "cpp",
-		"stack": "cpp"
+		"stack": "cpp",
+		"__memory": "cpp"
 	}
 }

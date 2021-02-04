@@ -22,7 +22,12 @@ int main(void)
 {
 	std::map<int, int> lol;
 
-	std::cout << (lol.begin() == lol.end());
+	std::map<int, int>::iterator it = lol.begin();
+	it--;
+	it--;
+	it--;
+
+	std::cout << it->first;
 
 
 }
