@@ -124,7 +124,7 @@ namespace ft
 			}
 			
 			explicit list(void): _size(0), _list(nullptr) { init_list();} // default constructor
-			explicit list (size_type n, const value_type& val = value_type()): _size(0) { init_list(); this->insert(this->begin(), n, val); } // fill constructor
+			explicit list (size_type n, const value_type& val = value_type()): _size(0) { init_list(); while (n--) push_back(val); } // fill constructor
 			template <class InputIterator>
 			list (InputIterator first, InputIterator last): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
 			list (const list& x): _size(0) { init_list(); *this = x;} // Copy constructor
