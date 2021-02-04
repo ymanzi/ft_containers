@@ -3,6 +3,7 @@
 #include "list.hpp"
 #include "vector.hpp"
 #include <string>
+#include <map>
 
 #define P(x) std::cout << std::boolalpha << x << std::endl
 #define A(x, y) std::cout << std::boolalpha << x << y << std::endl
@@ -19,15 +20,9 @@ void	show_list(T& l)
 
 int main(void)
 {
-	ft::list<int> l(3, -10);
+	std::map<int, int> lol;
 
-	//for (int i = 0; i < 10; i++)
-	//	l.push_back(i);
-	ft::list<int> l2(l.begin(), l.end());
-
-	P("---------> operator == <----");
-	A("operator '==' : ", (l == l2));
-	show_list(l2);
+	std::cout << (lol.begin() == lol.end());
 
 
 }
