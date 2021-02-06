@@ -1,9 +1,9 @@
-#	ifndef LIST_ITERATOR_HPP
-#	define LIST_ITERATOR_HPP
+#	ifndef MAP_ITERATOR_HPP
+#	define MAP_ITERATOR_HPP
 
 #include "map.hpp"
 
-namespace List
+namespace Map
 {
 	template < class Key, class T>
 	class iterator
@@ -20,14 +20,13 @@ namespace List
 		public:
 			typedef	std::pair<const Key, T>		value_type;
 
-
 			iterator(void): _map(nullptr) {}
 			iterator(void* p_map): _map(static_cast<t_map *>(p_map)) {} // compilation error if the cast fails
 			iterator(const iterator& oth) { *this = oth;}
 			virtual ~iterator(void) {}
 
 			t_map*			get_map(void) {return (_map);}
-			value_type&		operator* (void) {return (_map->value);}
+			value_type&		operator* (void) {return (this->_map->value);}
 			iterator&		operator= (const iterator& oth)
 			{
 				_map = oth._map;
@@ -38,7 +37,10 @@ namespace List
 			iterator&	operator++ () // equal to ++var
 			{
 				if (_map->next == nullptr)
-					raise(SIGSEGV);
+				{
+					while (_map->prev)
+						_map = _map->prev;
+				}
 				else
 					_map = _map->next;
 				return (*this);
@@ -54,7 +56,10 @@ namespace List
 			iterator&	operator-- () // equal to --var
 			{
 				if (_map->prev == nullptr)
-					raise(SIGSEGV);
+				{
+					while (_map->next)
+						_map = _map->next;
+				}
 				else
 					_map = _map->prev;
 				return (*this);
@@ -62,7 +67,7 @@ namespace List
 
 			iterator	operator-- (int) // equal to var-- 
 			{
-				iterator<T> tmp(*this);
+				iterator tmp(*this);
 				operator--();
 				return (tmp);
 			} 
@@ -73,13 +78,13 @@ namespace List
 	{
 		public:
 			reverse_iterator(void): iterator<Key, T>() {}
-			reverse_iterator(void* p_map): iterator(p_map) {} // compilation error if the cast fails
+			reverse_iterator(void* p_map): iterator<Key, T>(p_map) {} // compilation error if the cast fails
 			reverse_iterator(const reverse_iterator& oth): iterator<Key, T>() { this->_map = oth._map;}
 			virtual ~reverse_iterator(void) {}
-			reverse_iterator&	operator++ () { if (this->_map->prev == nullptr) raise (SIGSEGV); else this->_map = this->_map->prev; return (*this);} // equal to ++var
+			reverse_iterator&	operator++ () { if (this->_map->prev == nullptr){ while (this->_map->next) this->_map = this->_map->next;}  else this->_map = this->_map->prev; return (*this);} // equal to ++var
 			reverse_iterator	operator++ (int) { reverse_iterator tmp(*this); operator++(); return tmp;} // the (int) means that ++ is after the var // equal to var++
-			reverse_iterator&	operator-- () { if (this->_map->next == nullptr) raise (SIGSEGV); else this->_map = this->_map->next; return (*this);} // equal to --var
-			reverse_iterator	operator-- (int) { reverse_iterator<T> tmp(*this); operator--(); return tmp;} // equal to var--
+			reverse_iterator&	operator-- () { if (this->_map->next == nullptr) { while (this->_map->prev) this->_map = this->_map->prev;} else this->_map = this->_map->next; return (*this);} // equal to --var
+			reverse_iterator	operator-- (int) { reverse_iterator tmp(*this); operator--(); return tmp;} // equal to var--
 	};
 }
 

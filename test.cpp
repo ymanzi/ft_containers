@@ -3,7 +3,7 @@
 #include "list.hpp"
 #include "vector.hpp"
 #include <string>
-#include <map>
+#include "map.hpp"
 
 #define P(x) std::cout << std::boolalpha << x << std::endl
 #define A(x, y) std::cout << std::boolalpha << x << y << std::endl
@@ -20,16 +20,14 @@ void	show_list(T& l)
 
 int main(void)
 {
-	std::map<int, int> lol;
+	ft::map<int, int> lol;
+	for (int i = 0; i < 5; i++)
+		lol[i] = i;
 
-	std::map<int, int>::iterator it = lol.begin();
-	it--;
-	it--;
-	it--;
+	ft::map<int, int>::iterator it = lol.begin();
 
-	std::cout << it->first;
-
-
+	for (ft::map<int, int>::iterator it = lol.begin(); it != lol.end(); it++)
+		std::cout << it->first << std::endl;
 }
 
 
