@@ -5,6 +5,7 @@
 #include <limits>
 #include "map_iterator.hpp"
 #include "lexicographical_compare.hpp"
+#include <utility>
 
 namespace ft
 {
@@ -17,7 +18,7 @@ namespace ft
 			{
 				struct s_map			*prev;
 				struct s_map			*next;
-				std::pair<const Key, T>	value;
+				std::pair<const Key, T>	*value;
 			}				t_map;
 
 			size_t	_size;
@@ -29,7 +30,7 @@ namespace ft
 				_map = new t_map;
 				_map->next = nullptr;
 				_map->prev = nullptr;
-				_map->value = std::pair<const Key, T>();
+				_map->value = new std::pair<const Key, T>();
 			}
 		
 		public:
@@ -49,12 +50,13 @@ namespace ft
 			typedef Map::reverse_iterator<key_type, mapped_type>		reverse_iterator;
 			typedef const Map::reverse_iterator<key_type, mapped_type>	const_reverse_iterator;
 			
-			class value_compare
+			class value_compare: public std::binary_function<value_type,value_type,bool>
 			{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
 				protected:
 					Compare comp;
-					value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+					
 				public:
+					value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
 					typedef bool result_type;
 					typedef value_type first_argument_type;
 					typedef value_type second_argument_type;
@@ -67,7 +69,7 @@ namespace ft
 			explicit map(void): _size(0), _map(nullptr) { init_map();} // default constructor
 			explicit map (size_type n, const value_type& val = value_type()): _size(0) { init_map(); while (n--) push_back(val); } // fill constructor
 			template <class InputIterator>
-			map (InputIterator first, InputIterator last): _size(0) { init_map(); this->insert(this->begin(), first, last); } // range constructor
+			map (InputIterator first, InputIterator last): _size(0) { init_map(); this->insert(first, last); } // range constructor
 			map (const map& x): _size(0) { init_map(); *this = x;} // Copy constructor
 			virtual ~map()
 			{
@@ -76,6 +78,7 @@ namespace ft
 				while(_map)
 				{
 					elem = _map->next;
+					delete _map->value;
 					delete _map;
 					_map = elem;
 				}
@@ -91,7 +94,7 @@ namespace ft
 				elem = _map;
 				while (elem->next)
 				{
-					if (elem->value.first == k)
+					if (elem->value->first == k)
 						return (1);
 					elem = elem->next;
 				}
@@ -135,15 +138,22 @@ namespace ft
 
 			std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 			{
+				bool found = false;
 				iterator	it;
 				iterator	it2 = begin();
 				
 				for ( ; it2 != end(); it2++)
 				{
-					if (it2->first == k)
+					if (key_comp()(it2->first, k) ==  key_comp()(k, it2->first))
+					{
+						found = true;
 						break ;
+					}
 				}
-				it = it2++;
+				if (found)
+					it = it2++;
+				else
+					it = it2;
 				return  std::pair<const_iterator, const_iterator>(it, it2);
 			}
 
@@ -155,8 +165,9 @@ namespace ft
 
 				while (elem->next)
 				{
-					if (elem->value.first == k)
+					if (elem->value->first == k)
 					{
+						_size--;
 						next = elem->next;
 						if (prev == nullptr)
 						{
@@ -179,7 +190,7 @@ namespace ft
 
 			void		erase (iterator it)
 			{
-				this->erase(it->value.first);
+				this->erase(it->first);
 			}
 
 			void 		erase (iterator first, iterator last)
@@ -187,9 +198,8 @@ namespace ft
 				iterator next;
 				while (first != last)
 				{
-					next = first->next;
-					this->erase(first);
-					first = next;
+					next = first++;
+					this->erase(next);
 				}
 			}
 
@@ -197,7 +207,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (it->value.first == k)
+					if (it->first == k)
 						return (it);
 				}
 				return (this->end());
@@ -207,7 +217,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (it->value.first == k)
+					if (it->value->first == k)
 						return (const_iterator(it));
 				}
 				return (const_iterator(this->end()));
@@ -217,22 +227,21 @@ namespace ft
 			{
 				t_map	*n;
 				t_map	*prev = nullptr;
-				t_map	*next;
 				t_map	*elem = this->_map;
 				(void)position;
 				
-				while (elem->next && key_compare(val, elem->value.first))
+				while (elem->next && key_compare()(val.first, elem->value->first))
 				{
 					prev = elem;
 					elem = elem->next;
 				}
-				if (key_compare(val, elem->value.first) == key_compare(elem->value.first, val))
+				if (key_compare()(val.first, elem->value->first) == key_compare()(elem->value->first, val.first))
 					return iterator(elem);
 				else
 				{
 					_size++;
 					n = new t_map;
-					n->value = val;
+					n->value = new value_type(val);
 					elem->prev = n;
 					n->next = elem;
 					n->prev = nullptr;
@@ -255,21 +264,20 @@ namespace ft
 			{
 				t_map	*n;
 				t_map	*prev = nullptr;
-				t_map	*next;
 				t_map	*elem = this->_map;
 				
-				while (elem->next && key_compare(val, elem->value.first))
+				while (elem->next && !Compare()(val.first, elem->value->first))
 				{
 					prev = elem;
 					elem = elem->next;
 				}
-				if (elem->next && key_compare(val, elem->value.first) == key_compare(elem->value.first, val))
+				if (elem->next && Compare()(val.first, elem->value->first) == Compare()(elem->value->first, val.first))
 					return  std::pair<iterator, bool>(iterator(elem), false);
 				else
 				{
 					_size++;
 					n = new t_map;
-					n->value = val;
+					n->value = new value_type(val);
 					elem->prev = n;
 					n->next = elem;
 					n->prev = nullptr;
@@ -290,14 +298,13 @@ namespace ft
 				iterator it;
 				while (first != last)
 				{
-					insert(it, first->second);
+					this->insert(it, first);
 					++first;
 				}
 			}
 			
 			key_compare key_comp() const
 			{
-
 				return key_compare();
 			}
 			
@@ -305,7 +312,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (!key_compare(it->first, k))
+					if (!key_compare()(it->first, k))
 						return (it);
 				}
 				return this->end();
@@ -333,22 +340,33 @@ namespace ft
 			
 			mapped_type& operator[] (const key_type& k)
 			{
-				for (iterator it = begin(); it != end(); it++)
+				iterator it = this->begin();
+				for ( ; it != this->end(); it++)
 				{
 					if ((*it).first == k)
 						return (*it).second;
 				}
-				std::pair<iterator,bool> buf;
-				value_type tmp;
-				buf = this->insert(tmp);
-				return *(buf.first);
+				value_type buf(k, mapped_type());
+				this->insert(buf);
+				t_map *tmp = _map;
+				mapped_type *p = &(tmp->value->second);
+				while (tmp->next)
+				{
+					if (tmp->value->first == k)
+					{
+						p = &(tmp->value->second);
+						break ;
+					}
+					tmp = tmp->next;
+				}
+				return *p;
 			}
 
-			reverse_iterator	rbegin(){ iterator it = end(); return reverse_iterator(--it);}
-			const_reverse_iterator	rbegin() const {iterator it = end(); return const_reverse_iterator(--it);}
+			reverse_iterator	rbegin(){ iterator it = end(); return reverse_iterator((--it).get_map() );}
+			const_reverse_iterator	rbegin() const {iterator it = end(); return const_reverse_iterator((--it).get_map() );}
 			
-			reverse_iterator 	rend(){return reverse_iterator(end());}
-			const_reverse_iterator rend() const { return const_reverse_iterator(this->end());}
+			reverse_iterator 	rend(){return reverse_iterator(end().get_map());}
+			const_reverse_iterator rend() const { return const_reverse_iterator(this->end().get_map());}
 			
 			size_type			size() const {return _size;}
 			
@@ -358,7 +376,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (!key_compare(it->first, k) && it->first != k)
+					if (!key_compare()(it->first, k) && it->first != k)
 						return (it);
 				}
 				return this->end();
@@ -368,16 +386,17 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (!key_compare(it->first, k) && it->first != k)
+					if (!key_compare()(it->first, k) && it->first != k)
 						return (it);
 				}
 				return this->end();
 			}
 
-			/*value_compare value_comp() const
+			value_compare value_comp() const
 			{
-				return value_compare();
-			}*/
+				Compare c;
+				return value_compare(c);
+			}
 			
 	};
 
@@ -392,7 +411,7 @@ namespace ft
 			return (false);
 		while (it_l != lhs.end() && it_r != rhs.end())
 		{
-			if (*it_l != *it_r)
+			if (it_l->first != it_r->first || it_l->second != it_r->second)
 				return (false);
 			++it_l;
 			++it_r;

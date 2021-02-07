@@ -106,12 +106,12 @@ namespace ft
 			iterator			end() {return (iterator(_vector + _size));}
 			const_iterator		end() const {return (const_iterator(_vector + _size));}
 			iterator			erase (iterator position)
-			{
+			{ 
 				size_t	i = (size_t)(get_indice(position));
 				_size--;
 				while (i < _size)
 				{
-					_vector[i] = _vector[i + 1];
+					this->_vector[i] = this->_vector[i + 1];
 					i++;
 				}
 				return (position);
@@ -123,11 +123,8 @@ namespace ft
 				size_t	elem_l = (size_t)(get_indice(last));
 				size_t	i = elem_f;
 				
-				while (i < _size && elem_l + i < _size)
-				{
-					_vector[i] = _vector[elem_l + i];
-					i++;
-				}
+				for (size_t j = 0; j < _size && elem_l + j < _size; j++)
+					_vector[i + j] = _vector[elem_l + j];
 				_size -= (elem_l - elem_f);
 				return (last);
 			}
@@ -177,10 +174,7 @@ namespace ft
 			{
 				_size--;
 			}
-			void				pop_front()
-			{
-				this->erase(this->begin());
-			}
+
 			void				push_back (const value_type& val)
 			{
 				if (_size + 1 <= _max_size)

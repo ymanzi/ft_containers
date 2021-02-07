@@ -338,8 +338,8 @@ namespace ft
 				_list->prev = n;
 				_list = n;
 			}
-			reverse_iterator	rbegin(){return (reverse_iterator(back_e()));}
-			const_reverse_iterator	rbegin() const {return (const_reverse_iterator(&back()));}
+			reverse_iterator	rbegin(){return reverse_iterator((--end()).get_list());}
+			const_reverse_iterator	rbegin() const {return const_reverse_iterator((--end()).get_list());}
 			void				remove (const value_type& val)
 			{
 				t_list	*tmp;
@@ -374,13 +374,13 @@ namespace ft
 						_size--;
 						if (elem == _list)
 							_list = tmp;
-						this->del_one(elem);
+						this->del_one(*elem);
 					}
 					elem = tmp;
 				}
 			}
 			reverse_iterator 	rend(){ return reverse_iterator(back_e()->next);}
-			const_reverse_iterator rend() const { return const_reverse_iterator(this->end()) ;}
+			const_reverse_iterator rend() const { return const_reverse_iterator(this->end().get_list()) ;}
 			void 				resize (size_type n, value_type val = value_type())
 			{
 				size_t		i = 0;

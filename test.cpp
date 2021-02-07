@@ -4,6 +4,7 @@
 #include "vector.hpp"
 #include <string>
 #include "map.hpp"
+#include <map>
 
 #define P(x) std::cout << std::boolalpha << x << std::endl
 #define A(x, y) std::cout << std::boolalpha << x << y << std::endl
@@ -24,10 +25,10 @@ int main(void)
 	for (int i = 0; i < 5; i++)
 		lol[i] = i;
 
-	ft::map<int, int>::iterator it = lol.begin();
-
-	for (ft::map<int, int>::iterator it = lol.begin(); it != lol.end(); it++)
-		std::cout << it->first << std::endl;
+	ft::map<int, int>::reverse_iterator it = lol.rbegin();
+	lol[4] = 18;
+	for ( ; it != lol.rend(); it++)
+		std::cout << it->first << " " << (*it).second << std::endl;
 }
 
 

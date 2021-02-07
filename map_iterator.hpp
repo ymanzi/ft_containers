@@ -13,7 +13,7 @@ namespace Map
 			{
 				struct s_map			*prev;
 				struct s_map			*next;
-				std::pair<const Key, T>	value;
+				std::pair<const Key, T>	*value;
 			}				t_map;
 
 			t_map	*_map;
@@ -26,7 +26,10 @@ namespace Map
 			virtual ~iterator(void) {}
 
 			t_map*			get_map(void) {return (_map);}
-			value_type&		operator* (void) {return (this->_map->value);}
+			value_type&		operator* (void) {return (*(this->_map->value));}
+
+			std::pair<const Key, T>		*operator->(void) {return this->_map->value;}
+
 			iterator&		operator= (const iterator& oth)
 			{
 				_map = oth._map;
