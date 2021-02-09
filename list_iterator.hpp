@@ -73,7 +73,7 @@ namespace List
 				iterator<T> tmp(*this);
 				operator--();
 				return (tmp);
-			} 
+			}
 	};
 
 	template < typename T >

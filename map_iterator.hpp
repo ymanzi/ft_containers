@@ -20,6 +20,8 @@ namespace Map
 		public:
 			typedef	std::pair<const Key, T>		value_type;
 
+			static const bool input_iter = true;
+
 			iterator(void): _map(nullptr) {}
 			iterator(void* p_map): _map(static_cast<t_map *>(p_map)) {} // compilation error if the cast fails
 			iterator(const iterator& oth) { *this = oth;}

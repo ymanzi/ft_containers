@@ -5,10 +5,11 @@
 #include <limits>
 #include "list_iterator.hpp"
 #include "lexicographical_compare.hpp"
+#include "enable_if.hpp"
 
 namespace ft
 {
-	template < class T >
+	template < typename T >
 	class list
 	{
 		private:
@@ -98,6 +99,12 @@ namespace ft
 					elem = elem->next;
 				return (elem);
 			}
+
+			// template<bool B>
+			// struct enable_if {};
+
+			// struct enable_if<true, T> { typedef T type; };
+
 		public:
 			typedef	T							value_type;
 			typedef value_type&					reference;
@@ -124,9 +131,10 @@ namespace ft
 			}
 			
 			explicit list(void): _size(0), _list(nullptr) { init_list();} // default constructor
-			explicit list (size_type n, const value_type& val = value_type()): _size(0) { init_list(); while (n--) push_back(val); } // fill constructor
+			explicit list (size_type n, const value_type& val = value_type()): _size(0){ init_list(); while (n--) push_back(val); } // fill constructor
+			
 			template <class InputIterator>
-			list (InputIterator first, InputIterator last): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
+			list (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
 			list (const list& x): _size(0) { init_list(); *this = x;} // Copy constructor
 
 			template <class InputIterator>
@@ -235,7 +243,7 @@ namespace ft
 					insert(position, val);
 			}
 			template <class InputIterator>
-    		void 				insert (iterator position, InputIterator first, InputIterator last)  // range
+    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
 			{
 				while (first != last)
 				{

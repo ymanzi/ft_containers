@@ -5,6 +5,7 @@
 #include <limits>
 #include "map_iterator.hpp"
 #include "lexicographical_compare.hpp"
+#include "enable_if.hpp"
 #include <utility>
 
 namespace ft
@@ -13,7 +14,6 @@ namespace ft
 	class map
 	{
 		private:
-
 			typedef	struct	s_map
 			{
 				struct s_map			*prev;
@@ -31,8 +31,7 @@ namespace ft
 				_map->next = nullptr;
 				_map->prev = nullptr;
 				_map->value = new std::pair<const Key, T>();
-			}
-		
+			}		
 		public:
 			typedef	std::pair<const Key, T>		value_type;
 			typedef value_type&					reference;
@@ -67,9 +66,8 @@ namespace ft
 			};
 			
 			explicit map(void): _size(0), _map(nullptr) { init_map();} // default constructor
-			explicit map (size_type n, const value_type& val = value_type()): _size(0) { init_map(); while (n--) push_back(val); } // fill constructor
 			template <class InputIterator>
-			map (InputIterator first, InputIterator last): _size(0) { init_map(); this->insert(first, last); } // range constructor
+			map (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr): _size(0) { init_map(); while (first != last) this->insert(*first++); } // range constructor
 			map (const map& x): _size(0) { init_map(); *this = x;} // Copy constructor
 			virtual ~map()
 			{
@@ -293,14 +291,10 @@ namespace ft
 			}
 
 			template <class InputIterator>
-    		void 		insert (InputIterator first, InputIterator last)  // range
+    		void 		insert (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
 			{
-				iterator it;
 				while (first != last)
-				{
-					this->insert(it, first);
-					++first;
-				}
+					this->insert(*first++);
 			}
 			
 			key_compare key_comp() const
