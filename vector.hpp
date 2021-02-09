@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "vector_iterator.hpp"
 #include "lexicographical_compare.hpp"
+#include "enable_if.hpp"
 
 namespace ft
 {
@@ -75,7 +76,7 @@ namespace ft
 			explicit vector(void): _size(0) { init_vector();} // default constructor
 			explicit vector (size_type n, const value_type& val = value_type()) { init_vector(n, val);} // fill constructor
 			template <class InputIterator>
-			vector (InputIterator first, InputIterator last) { init_vector(); this->insert(this->begin(), first, last); } // range constructor
+			vector (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr) { init_vector(); this->insert(this->begin(), first, last); } // range constructor
 			vector (const vector& x) { init_vector(); *this = x;} // Copy constructor
 
 			template <class InputIterator>
@@ -152,7 +153,7 @@ namespace ft
 					insert(position, val);
 			}
 			template <class InputIterator>
-    		void 				insert (iterator position, InputIterator first, InputIterator last)  // range
+    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
 			{
 				while (first != last)
 				{

@@ -329,6 +329,7 @@ namespace ft
 					_size++;
 					n = new t_list;
 					n->next = elem->next;
+					elem->next->prev = n;
 					n->value = val;
 					n->prev = elem;
 					elem->next = n;
@@ -346,8 +347,8 @@ namespace ft
 				_list->prev = n;
 				_list = n;
 			}
-			reverse_iterator	rbegin(){return reverse_iterator((--end()).get_list());}
-			const_reverse_iterator	rbegin() const {return const_reverse_iterator((--end()).get_list());}
+			reverse_iterator	rbegin(){return reverse_iterator(back_e());}
+			const_reverse_iterator	rbegin() const {return const_reverse_iterator(back_e());}
 			void				remove (const value_type& val)
 			{
 				t_list	*tmp;
@@ -387,8 +388,8 @@ namespace ft
 					elem = tmp;
 				}
 			}
-			reverse_iterator 	rend(){ return reverse_iterator(back_e()->next);}
-			const_reverse_iterator rend() const { return const_reverse_iterator(this->end().get_list()) ;}
+			reverse_iterator 	rend(){ if (back_e()->next) return reverse_iterator(back_e()->next); return reverse_iterator(back_e());}
+			const_reverse_iterator rend() const { if (back_e()->next) return const_reverse_iterator(back_e()->next); return const_reverse_iterator(back_e());}
 			void 				resize (size_type n, value_type val = value_type())
 			{
 				size_t		i = 0;
