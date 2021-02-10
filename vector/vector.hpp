@@ -5,8 +5,8 @@
 #include <limits>
 #include <stdexcept>
 #include "vector_iterator.hpp"
-#include "lexicographical_compare.hpp"
-#include "enable_if.hpp"
+#include "../utils/lexicographical_compare.hpp"
+#include "../utils/enable_if.hpp"
 
 namespace ft
 {
@@ -29,15 +29,12 @@ namespace ft
 
 			void	new_size(size_t n, T val = T())
 			{
-				size_t	i = 0;
-				T		*n_vec = new T[n];
-				while (i < n && i < _size)
-				{
+				T	*n_vec = new T[n];
+				size_t i = 0;
+				for ( ; i < n && i < _size; i++)
 					n_vec[i] = _vector[i];
-					i++;
-				}
-				while (i < n)
-					n_vec[i++] = val;
+				for ( ; i < n; i++)
+					n_vec[i] = val;
 				_max_size = n;
 				delete _vector;
 				_vector = n_vec;
@@ -46,12 +43,19 @@ namespace ft
 			size_t	get_indice(Vector::iterator<T> &position)
 			{
 				T*		ptr = (T*)(position.get_vector());
+
+				if (position == this->end())
+					return (_size);
+				else if (position == this->begin())
+					return (0);
 				for (size_t i = 0; i < _size; i++)
 				{
 					if (this->_vector + i == ptr)
 						return (i);
 				}
-				return (_size - 1);
+				if (_size)
+					return (_size - 1);
+				return (_size);
 			}
 
 		public:
@@ -74,18 +78,24 @@ namespace ft
 			}
 
 			explicit vector(void): _size(0) { init_vector();} // default constructor
-			explicit vector (size_type n, const value_type& val = value_type()) { init_vector(n, val);} // fill constructor
+			explicit vector (size_type n, const value_type& val = value_type()) { init_vector(n, val); _size = n;} // fill constructor
 			template <class InputIterator>
 			vector (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr) { init_vector(); this->insert(this->begin(), first, last); } // range constructor
-			vector (const vector& x) { init_vector(); *this = x;} // Copy constructor
+			vector (const vector& x)
+			{
+				init_vector(); _size = 0;
+				for (iterator it = x.begin(); it != x.end(); it++)
+					this->push_back(*it);
+			} // Copy constructor
 
 			template <class InputIterator>
-  			void 				assign (InputIterator first, InputIterator last) // range
+  			void 				assign (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr) // range
 			{
-				this->clear();
+				_size = 0;
 				this->insert(this->begin(), first, last);
 			}
-			void assign (size_type n, const value_type& val) {this->clear(); this->insert(this->begin(), n, val);} //Fill
+			
+			void assign (size_type n, const value_type& val) { this->resize(n); for (size_t i = 0; i < n; i++) (*this)[i] = val; } //Fill
 			reference at (size_type n) { if (n >= _size) throw std::out_of_range("vector::_M_range_check"); return _vector[n];}
 			const_reference at (size_type n) const {return (const_cast<const_reference>(at(n)));}
 			
@@ -101,6 +111,7 @@ namespace ft
 			{
 				delete _vector;
 				init_vector();
+				_size = 0;
 			}
 
 			bool				empty() const {if (_size) return (false); return (true);}
@@ -133,44 +144,53 @@ namespace ft
 			const_reference		front() const {return (const_cast<const_reference>(front()));}
 			iterator			insert (iterator position, const value_type& val)	// single element
 			{
+				if (position == this->end())
+				{
+					this->push_back(val);
+					return iterator(_vector + _size - 1);
+				}
+				else
+				{
 				size_t	elem = (size_t)(get_indice(position));
-				size_t	i = 0;
-				if (_size + 1 >= _max_size)
+				if (_size + 2 >= _max_size)
 					new_size(_size + 5);
+				size_t	i = 0;
 				vector	n(*this);
 				_vector[elem] = val;
-				while (elem + i < _size)
-				{
+				for (size_t i = 0; elem + i < _size; i++)
 					_vector[elem + i + 1] = n._vector[elem + i];
-					i++;
-				}
 				_size++;
-				return (position);
+				return iterator(_vector + elem);
+				}
 			}
+			
 			void				insert (iterator position, size_type nbr, const value_type& val)	// fill
 			{
 				while (nbr--)
-					insert(position, val);
+					position = insert(position, val);
 			}
+
 			template <class InputIterator>
     		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
 			{
 				while (first != last)
 				{
-					insert(position, *first);
+					position = insert(position, *first);
 					++first;
 				}
 			}
 			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(T));}
+
+			#define P(x) std::cout << std::boolalpha << x << std::endl
 			vector& 				operator= (const vector& oth)
 			{
-				this->clear();
-				for (iterator it = oth.begin(); it != oth.end(); it++ )
+				_size = 0;
+				for (iterator it = oth.begin(); it != oth.end(); it++)
 					this->push_back(*it);
 				return (*this);
 			}
 			reference 		operator[] (size_type n) {if (n >= _size) return (_vector[_size - 1]); return _vector[n];}
-			const_reference operator[] (size_type n) const {return const_cast<const T>(_vector[n]);}
+			const_reference operator[] (size_type n) const {return _vector[n];}
 			void				pop_back()
 			{
 				_size--;
@@ -178,7 +198,7 @@ namespace ft
 
 			void				push_back (const value_type& val)
 			{
-				if (_size + 1 <= _max_size)
+				if (_size + 1 >= _max_size)
 					new_size(_size + 5);
 				this->_vector[_size] = val;
 				_size++;
@@ -194,7 +214,12 @@ namespace ft
 				_size = n;
 			}
 			size_type			size() const {return _size;}
-			void				swap (vector& x) {vector<T> n(*this);   *this = x; x = n;}
+			void				swap (vector& x)
+			{
+				vector n(*this);
+				*this = x;
+				x = n;
+			}
 	};
 
 	//relational operators
