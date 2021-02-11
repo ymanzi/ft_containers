@@ -154,6 +154,8 @@ void t_vector(void)
 	P("operator '>=' : " << ((s >= s2) == (r >= r2)) );
 }
 
+bool g_verif = true;
+
 int main(void)
 {
 	// t_vector();
@@ -178,8 +180,8 @@ int main(void)
 	iterator_t(a, b);
 	r_iterator_t(a, b);
 	comp_t(a, b);
-	iterator_comp_t(a, b);
-	r_iterator_comp_t(a, b);
-	P("Vector Test Finished: If you have no error, everything is Good, otherwhise.....");
+	iterator_comp_t_ra(a, b);
+	r_iterator_comp_t_ra(a, b);
+	end_check(g_verif, "VECTOR TEST: ");
 	return (0);
 }

@@ -4,8 +4,8 @@
 #include <iostream>
 #include <limits>
 #include "list_iterator.hpp"
-#include "lexicographical_compare.hpp"
-#include "enable_if.hpp"
+#include "../utils/lexicographical_compare.hpp"
+#include "../utils/enable_if.hpp"
 
 namespace ft
 {
@@ -256,11 +256,9 @@ namespace ft
 			{
 				if ( *this != x)
 				{
-					list	n;
-					if (this->size())
-						n.splice(n.begin(), *this);
+					list	n(*this);
 					if (x.size())
-						n.splice(n.begin(), x);
+						n.insert(n.begin(), x.begin(), x.end());
 					n.sort();
 					*this = n;
 				}
@@ -270,12 +268,12 @@ namespace ft
 			  {
 				if ( *this != x)
 				{
-					list	n;
-					n.splice(n.begin(), *this);
-					n.splice(n.begin(), x);
+					list	n(*this);
+					if (x.size())
+						n.insert(n.begin(), x.begin(), x.end());
 					n.sort(comp);
 					*this = n;
-				}
+				}			
 			}
 			list& 				operator= (const list& oth)
 			{
@@ -436,51 +434,39 @@ namespace ft
 					*min = tmp;
 				}
 			}
+
 			template <class Compare>
   			void				sort (Compare comp)
 			{
 				iterator	min;
 				T			tmp;
 
-				for (iterator it1 = this->begin(); it1 != this->end(); it1++)
+				for (iterator it1 = this->begin(); it1 != this->end(); ++it1)
 				{
 					min = it1;
-					for (iterator it2 = it1; it2 != this->end(); it2++)
+					for (iterator it2(it1); it2 != this->end(); ++it2)
 					{
 						if (comp(*it2, *min))
 							min = it2;
 					}
-					if (comp(*min, *it1))
-					{
-						tmp = *it1;
-						*it1 = *min;
-						*min = tmp;
-					}
+					tmp = *it1;
+					*it1 = *min;
+					*min = tmp;
 				}
 			}
-			void				splice (iterator position, list& x) { insert(position, x.begin(), x.end());} //entire list
+			void				splice (iterator position, list& x) { insert(position, x.begin(), x.end()); x.erase(x.begin(), x.end()); } //entire list
 			void 				splice (iterator position, list& x, iterator i) // single element
 			{
-				for (iterator it = x.begin(); it != x.end(); it++)
-				{
-					if (it == i)
-					{
-						insert(position, *i);
-						return ;
-					}
-				}
+				insert(position, *i);
+				x.erase(i);
 			} 
+
 			void				splice (iterator position, list& x, iterator first, iterator last) // element range
 			{
-				for (iterator it = x.begin(); it != x.end(); it++)
-				{
-					if (it == first)
-					{
-						insert(position, first, last);
-						return ;
-					}
-				}
-			} 
+				insert(position, first, last);
+				x.erase(first, last);
+			}
+			
 			void				swap (list& x) {list<T> n(*this);   *this = x; x = n;}
 			void				unique()
 			{
