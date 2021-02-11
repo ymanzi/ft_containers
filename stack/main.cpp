@@ -1,5 +1,5 @@
-#include "queue.hpp"
-#include <queue>
+#include "stack.hpp"
+#include <stack>
 #include <string>
 #include "../utils/test.hpp"
 
@@ -7,16 +7,15 @@ bool g_verif = true;
 
 int main(void)
 {
-	std::queue<int> b;
-	ft::queue<int> a;
+	std::stack<int> b;
+	ft::stack<int> a;
 
-	queue_push_t(a, b);
-	queue_back_t(a, b);
+	stack_push_t(a, b);
+	stack_top_t(a, b);
 	queue_empty_t(a, b);
-	queue_front_t(a, b);
-	queue_pop_t(a, b);
+	stack_pop_t(a, b);
 	queue_size_t(a, b);
 	queue_comp_t(a, b);
-	end_check(g_verif, "QUEUE TEST: ");
+	end_check(g_verif, "STACK TEST: ");
 	return (0);
 }

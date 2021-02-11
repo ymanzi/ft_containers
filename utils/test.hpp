@@ -79,6 +79,8 @@ void	show_map(T& l)
 template <class T, class K>
 bool	compare_container(T & t, K & k)
 {
+	(void)t;
+	(void)k;
 	typename T::iterator it = t.begin();
 	typename K::iterator jt = k.begin();
 
@@ -98,6 +100,8 @@ bool	compare_container(T & t, K & k)
 template <class T, class K>
 bool	compare_map(T & t, K & k)
 {
+	(void)t;
+	(void)k;
 	typename T::iterator it = t.begin();
 	typename K::iterator jt = k.begin();
 
@@ -121,6 +125,8 @@ bool compare_fct(T a, T b)
 template <class T, class K>
 void constructor_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	// P("~~~~~~~~ Default Constructor ~~~~~~~~~~");
 	T ad = T();
 	K bd = K();
@@ -148,6 +154,8 @@ void constructor_t(T const& t, K const& k)
 template <class T, class K>
 void map_constructor_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	// P("~~~~~~~~ Default Constructor ~~~~~~~~~~");
 	T ad = T();
 	K bd = K();
@@ -175,6 +183,8 @@ void map_constructor_t(T const& t, K const& k)
 template <class T, class K>
 void assign_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T basic = T(5, 2);
 	K basic2 = K(5, 2);
 	// P("~~~~~~~~ Assign Range ~~~~~~~~~~");	
@@ -195,6 +205,8 @@ void assign_t(T const& t, K const& k)
 template <class T, class K>
 void at_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	T a = T(5, 2);
 	K b = K(5, 2);
@@ -223,6 +235,8 @@ void at_t(T const& t, K const& k)
 template <class T, class K>
 void back_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -240,6 +254,8 @@ void back_t(T const& t, K const& k)
 template <class T, class K>
 void queue_back_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -257,9 +273,10 @@ void queue_back_t(T const& t, K const& k)
 template <class T, class K>
 void capacity_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
-	bool verif = true;
 	// P("~~~~~~~~ Capacity ~~~~~~~~~~");	
 	for (size_t i = 0; i < 100; i++)
 	{
@@ -272,6 +289,8 @@ void capacity_t(T const& t, K const& k)
 template <class T, class K>
 void map_clear_empty_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -294,6 +313,8 @@ void map_clear_empty_t(T const& t, K const& k)
 template <class T, class K>
 void clear_empty_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a(121, 5);
 	K b(121, 5);
 	bool verif = true;
@@ -311,6 +332,8 @@ void clear_empty_t(T const& t, K const& k)
 template <class T, class K>
 void map_count_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -326,6 +349,8 @@ void map_count_t(T const& t, K const& k)
 template <class T, class K>
 void map_equal_range_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -345,6 +370,8 @@ void map_equal_range_t(T const& t, K const& k)
 template <class T, class K>
 void queue_empty_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -361,6 +388,8 @@ void queue_empty_t(T const& t, K const& k)
 template <class T, class K>
 void erase_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -384,7 +413,6 @@ void erase_t(T const& t, K const& k)
 			typename T::iterator it = a.begin();
 			typename K::iterator ik = b.begin();
 
-			int r2 = rand() % 20;
 			for (int l = 0; i < l; i++)
 			{
 				it++;
@@ -438,9 +466,10 @@ void erase_t(T const& t, K const& k)
 template <class T, class K>
 void map_erase_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
-	bool verif = true;
 	
 	typename T::iterator it = a.begin();
 	typename K::iterator ik = b.begin();
@@ -495,6 +524,8 @@ void map_erase_t(T const& t, K const& k)
 template <class T, class K>
 void map_find_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -510,6 +541,8 @@ void map_find_t(T const& t, K const& k)
 template <class T, class K>
 void front_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -527,6 +560,8 @@ void front_t(T const& t, K const& k)
 template <class T, class K>
 void queue_front_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -544,6 +579,8 @@ void queue_front_t(T const& t, K const& k)
 template <class T, class K>
 void insert_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -640,6 +677,8 @@ void insert_t(T const& t, K const& k)
 template <class T, class K>
 void map_insert_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -732,6 +771,8 @@ void map_insert_t(T const& t, K const& k)
 template <class T, class K>
 void map_key_comp_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -751,6 +792,8 @@ void map_key_comp_t(T const& t, K const& k)
 template <class T, class K>
 void map_lower_bound_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -768,11 +811,12 @@ void map_lower_bound_t(T const& t, K const& k)
 template <class T, class K>
 void merge_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	T a1;
 	K b;
 	K b1;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	
 	typename T::iterator it2;
@@ -814,7 +858,8 @@ void merge_t(T const& t, K const& k)
 template <class T, class K>
 void operator_equal_t(T const& t, K const& k)
 {
-	bool verif = true;
+	(void)t;
+	(void)k;
 	std::srand(std::time(nullptr));
 	
 	T a;
@@ -838,6 +883,8 @@ void operator_equal_t(T const& t, K const& k)
 template <class T, class K>
 void map_operator_equal_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -861,6 +908,8 @@ void map_operator_equal_t(T const& t, K const& k)
 template <class T, class K>
 void pop_back_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -890,6 +939,8 @@ void pop_back_t(T const& t, K const& k)
 template <class T, class K>
 void queue_pop_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -917,6 +968,8 @@ void queue_pop_t(T const& t, K const& k)
 template <class T, class K>
 void stack_pop_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -944,6 +997,8 @@ void stack_pop_t(T const& t, K const& k)
 template <class T, class K>
 void pop_front_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -973,6 +1028,8 @@ void pop_front_t(T const& t, K const& k)
 template <class T, class K>
 void push_back_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -995,6 +1052,8 @@ void push_back_t(T const& t, K const& k)
 template <class T, class K>
 void push_front_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -1018,6 +1077,8 @@ void push_front_t(T const& t, K const& k)
 template <class T, class K>
 void queue_push_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -1038,6 +1099,8 @@ void queue_push_t(T const& t, K const& k)
 template <class T, class K>
 void stack_push_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -1059,12 +1122,12 @@ void stack_push_t(T const& t, K const& k)
 template <class T, class K>
 void remove_t(T const& t, K const& k)
 {
-	bool verif = true;
+	(void)t;
+	(void)k;
 	std::srand(std::time(nullptr));
 	
 	T a;
 	K b;
-	int r;
 	int tab[20];
 	for (int i = 0; i < 20; i++)
 		tab[i] = rand();
@@ -1088,12 +1151,12 @@ void remove_t(T const& t, K const& k)
 template <class T, class K>
 void remove_if_t(T const& t, K const& k)
 {
-	bool verif = true;
+	(void)t;
+	(void)k;
 	std::srand(std::time(nullptr));
 	
 	T a;
 	K b;
-	int r;
 	int tab[20];
 	for (int i = 0; i < 20; i++)
 		tab[i] = rand() % 100;
@@ -1117,6 +1180,8 @@ void remove_if_t(T const& t, K const& k)
 template <class T, class K>
 void re_size_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	
@@ -1139,12 +1204,12 @@ void re_size_t(T const& t, K const& k)
 template <class T, class K>
 void reverse_t(T const& t, K const& k)
 {
-	bool verif = true;
+	(void)t;
+	(void)k;
 	std::srand(std::time(nullptr));
 	
 	T a;
 	K b;
-	int r;
 	int tab[20];
 	for (int i = 0; i < 20; i++)
 		tab[i] = rand() % 100;
@@ -1166,6 +1231,8 @@ void reverse_t(T const& t, K const& k)
 template <class T, class K>
 void map_size_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -1184,6 +1251,8 @@ void map_size_t(T const& t, K const& k)
 template <class T, class K>
 void queue_size_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -1201,11 +1270,12 @@ void queue_size_t(T const& t, K const& k)
 template <class T, class K>
 void splice_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	T a1;
 	K b;
 	K b1;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	typename T::iterator it;
 	typename T::iterator it2;
@@ -1315,6 +1385,8 @@ void splice_t(T const& t, K const& k)
 template <class T, class K>
 void swap_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	{
@@ -1372,6 +1444,8 @@ void swap_t(T const& t, K const& k)
 template <class T, class K>
 void map_swap_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	bool verif = true;
 	std::srand(std::time(nullptr));
 	{
@@ -1434,9 +1508,10 @@ void map_swap_t(T const& t, K const& k)
 template <class T, class K>
 void sort_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	
 	typename T::iterator it2;
@@ -1476,6 +1551,8 @@ void sort_t(T const& t, K const& k)
 template <class T, class K>
 void stack_top_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	bool verif = true;
@@ -1493,13 +1570,13 @@ void stack_top_t(T const& t, K const& k)
 template <class T, class K>
 void unique_t(T const& t, K const& k)
 {
-	bool verif = true;
+	(void)t;
+	(void)k;
 	std::srand(std::time(nullptr));
 
 	// P("~~~~~~~~ Unique ~~~~~~~~~~");	
 	T a;
 	K b;
-	int r;
 	int tab[20];
 	for (int i = 0; i < 20; i++)
 		tab[i] = rand();
@@ -1533,6 +1610,8 @@ void unique_t(T const& t, K const& k)
 template <class T, class K>
 void map_upper_bound_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -1549,6 +1628,8 @@ void map_upper_bound_t(T const& t, K const& k)
 template <class T, class K>
 void map_value_comp_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 
@@ -1572,6 +1653,8 @@ void map_value_comp_t(T const& t, K const& k)
 template <class T, class K>
 void iterator_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
@@ -1605,6 +1688,8 @@ void iterator_t(T const& t, K const& k)
 template <class T, class K>
 void r_iterator_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
@@ -1638,12 +1723,13 @@ void r_iterator_t(T const& t, K const& k)
 template <class T, class K>
 void comp_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	T a1;
 	K b;
 	K b1;
 	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	typename T::reverse_iterator it;
 	typename K::reverse_iterator ik;
@@ -1665,12 +1751,13 @@ void comp_t(T const& t, K const& k)
 template <class T, class K>
 void queue_comp_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	T a1;
 	K b;
 	K b1;
 	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	for (size_t i = 0; i < 100; i++)
 	{
@@ -1689,10 +1776,11 @@ void queue_comp_t(T const& t, K const& k)
 template <class T, class K>
 void iterator_comp_t_ra(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	typename T::iterator it = a.begin();
 	typename T::iterator it2(it);
@@ -1728,10 +1816,11 @@ void iterator_comp_t_ra(T const& t, K const& k)
 template <class T, class K>
 void iterator_comp_t_bd(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	typename T::iterator it = a.begin();
 	typename T::iterator it2(it);
@@ -1763,10 +1852,11 @@ void iterator_comp_t_bd(T const& t, K const& k)
 template <class T, class K>
 void r_iterator_comp_t_ra(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	typename T::reverse_iterator it = a.rbegin();
 	typename T::reverse_iterator it2(it);
@@ -1802,10 +1892,11 @@ void r_iterator_comp_t_ra(T const& t, K const& k)
 template <class T, class K>
 void r_iterator_comp_t_bd(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	typename T::reverse_iterator it = a.rbegin();
 	typename T::reverse_iterator it2(it);
@@ -1838,6 +1929,8 @@ void r_iterator_comp_t_bd(T const& t, K const& k)
 template <class T, class K>
 void map_iterator_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
@@ -1870,6 +1963,8 @@ void map_iterator_t(T const& t, K const& k)
 template <class T, class K>
 void map_r_iterator_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
 	int r;
@@ -1903,6 +1998,8 @@ void map_r_iterator_t(T const& t, K const& k)
 template <class T, class K>
 void map_comp_t(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	T a1;
 	K b;
@@ -1923,10 +2020,10 @@ void map_comp_t(T const& t, K const& k)
 template <class T, class K>
 void map_iterator_comp_t_bd(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
-	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	
 	for (int i = 0; i < 20; i++)
@@ -1956,10 +2053,10 @@ void map_iterator_comp_t_bd(T const& t, K const& k)
 template <class T, class K>
 void map_r_iterator_comp_t_bd(T const& t, K const& k)
 {
+	(void)t;
+	(void)k;
 	T a;
 	K b;
-	int r;
-	bool verif = true;
 	std::srand(std::time(nullptr));
 	
 	for (int i = 0; i < 20; i++)
