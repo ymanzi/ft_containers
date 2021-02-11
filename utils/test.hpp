@@ -4,6 +4,12 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <map>
+#include "../map/map.hpp"
+#include <vector>
+#include <list>
+#include <utility>
+
 
 #define NC "\e[0m"
 #define RED "\e[0;31m"
@@ -30,7 +36,7 @@ void end_check(bool val, std::string const& msg)
 	if (val)
 		P(GRN " [CORRECT]" NC);
 	else
-		P(REDB "[K.O]" NC);
+		P(RED "[K.O]" NC);
 }
 
 // a predicate implemented as a function:
@@ -232,6 +238,23 @@ void back_t(T const& t, K const& k)
 }
 
 template <class T, class K>
+void queue_back_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	bool verif = true;
+	// P("~~~~~~~~ Back ~~~~~~~~~~");	
+	for (size_t i = 0; i < 5; i++)
+	{
+		a.push(i * i);
+		b.push(i * i);
+		if (a.back() != b.back())
+			verif = false;
+	}
+	check(verif, "Function Back");
+}
+
+template <class T, class K>
 void capacity_t(T const& t, K const& k)
 {
 	T a;
@@ -251,16 +274,21 @@ void map_clear_empty_t(T const& t, K const& k)
 {
 	T a;
 	K b;
+	bool verif = true;
 
 	for (int i = 0; i < 10; i++)
 	{
+		if (a.empty() != b.empty())
+			verif = false;
 		a.insert(std::pair<int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	// P("~~~~~~~~ Clear ~~~~~~~~~~");	
 	a.clear();
 	b.clear();
-	check(((a.size() == b.size()) && a.empty()), "Function Clear & Empty");
+	if ((a.size() != b.size()) && a.empty() != b.empty())
+		verif = false;
+	check(verif , "Function Clear & Empty");
 }
 
 template <class T, class K>
@@ -268,10 +296,16 @@ void clear_empty_t(T const& t, K const& k)
 {
 	T a(121, 5);
 	K b(121, 5);
+	bool verif = true;
+
+	if (a.empty() != b.empty())
+		verif = false;
 	// P("~~~~~~~~ Clear ~~~~~~~~~~");	
 	a.clear();
 	b.clear();
-	check(((a.size() == b.size()) && a.empty()), "Function Clear & Empty");
+	if ((a.size() != b.size()) && a.empty() != b.empty())
+		verif = false;
+	check(verif, "Function Clear & Empty");
 }
 
 template <class T, class K>
@@ -306,6 +340,22 @@ void map_equal_range_t(T const& t, K const& k)
 	// P("~~~~~~~~ Equal_Range ~~~~~~~~~~");	
 	check((a1.first->first == b1.first->first && a1.first->second == b1.first->second && 
 		a1.second->first == b1.second->first && a1.second->second == b1.second->second), "Function Equal_Range");
+}
+
+template <class T, class K>
+void queue_empty_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	bool verif = true;
+
+	if (a.empty() != b.empty())
+		verif = false;
+	a.push(5);
+	b.push(5);
+	if (a.empty() != b.empty())
+		verif = false;
+	check(verif, "Function Empty");
 }
 
 template <class T, class K>
@@ -392,74 +442,69 @@ void map_erase_t(T const& t, K const& k)
 	K b;
 	bool verif = true;
 	
-	typename T::iterator it2;
-	typename K::iterator ik2;
-	
-	typename T::iterator it3;
-	typename K::iterator ik3;
+	typename T::iterator it = a.begin();
+	typename K::iterator ik = b.begin();
 	
 	// P("~~~~~~~~ Erase (Single Element) ~~~~~~~~~~");	
 	{
-		for (size_t i = 0; i < 100; i++)
+		for (size_t i = 0; i < 10; i++)
 		{
-			a.push_back(i * i);
-			b.push_back(i * i);
+			a.insert(std::pair<int, int>(i, i*i));
+			b.insert(std::pair<int, int>(i, i*i));
 		}
-		int r = rand() % 60;
-		for (int i = 0; i < r; i++)
+		it = a.begin();
+		ik = b.begin();
+		for (int i = 0; i < 5; i++)
 		{
-			typename T::iterator it = a.begin();
-			typename K::iterator ik = b.begin();
-
-			int r2 = rand() % 20;
-			for (int l = 0; i < l; i++)
-			{
-				it++;
-				ik++;
-			}
-			it2 = a.erase(it);
-			ik2 = b.erase(ik);
-
-			if (*it2 != *ik2)
-				verif = false;
-		}
-		check((verif && compare_container(a, b)), "Function Erase (Single Element)");
+			it++;
+			ik++;
+		}	
+		a.erase(it);
+		b.erase(ik);
+		check((compare_map(a, b) && a.size() == b.size()), "Function Erase (Single Element - Iterator)");
+	}
+	{
+		a.erase(2);
+		a.erase(2);
+		b.erase(2);
+		b.erase(2);
+		check((compare_map(a, b) && a.size() == b.size()), "Function Erase (Single Element - Key)");
 	}
 	// P("~~~~~~~~ Erase (Iterator) ~~~~~~~~~~");	
 	{
-		for (size_t i = 0; i < 100; i++)
+		it = a.begin();
+		ik = b.begin();
+		for (int i = 0; i < 3; i++)
 		{
-			a.push_back(i * i);
-			b.push_back(i * i);
+			it++;
+			ik++;
 		}
-		int r = rand() % 10;
-		for (int i = 0; i < r; i++)
+		typename T::iterator it2(it);
+		typename K::iterator ik2(ik);
+		for (int i = 0; i < 2; i++)
 		{
-			typename T::iterator it = a.begin();
-			typename K::iterator ik = b.begin();
-
-			int r2 = rand() % 10;
-			for (int l = 0; i < l; i++)
-			{
-				it++;
-				ik++;
-			}
-			it2 = it;
-			ik2 = ik;
-
-			r2 = rand() % 10;
-			for (int l = 0; i < l; i++)
-			{
-				it2++;
-				ik2++;
-			}
-			it3 = a.erase(it, it2);
-			ik3 = b.erase(ik, ik2);
-			if (*it3 != *ik3)
-				verif = false;
+			it2++;
+			ik2++;
 		}
-		check((verif && compare_container(a, b)), "Function Erase (Iterator)");
+		a.erase(it, it2);
+		b.erase(ik, ik2);
+		check((compare_map(a, b) && a.size() == b.size()), "Function Erase (Range Iterator)");
 	}
+}
+
+template <class T, class K>
+void map_find_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+
+	for (int i = 0; i < 10; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+	// P("~~~~~~~~ Find ~~~~~~~~~~");	
+	check((a.find(5)->first == b.find(5)->first && a.find(5)->second == b.find(5)->second && a.find(36) == a.end()), "Function Find");
 }
 
 template <class T, class K>
@@ -473,6 +518,23 @@ void front_t(T const& t, K const& k)
 	{
 		a.push_back(i * i);
 		b.push_back(i * i);
+		if (a.front() != b.front())
+			verif = false;
+	}
+	check(verif, "Function Front");
+}
+
+template <class T, class K>
+void queue_front_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	bool verif = true;
+	// P("~~~~~~~~ Front ~~~~~~~~~~");	
+	for (size_t i = 0; i < 5; i++)
+	{
+		a.push(i * i);
+		b.push(i * i);
 		if (a.front() != b.front())
 			verif = false;
 	}
@@ -576,6 +638,134 @@ void insert_t(T const& t, K const& k)
 }
 
 template <class T, class K>
+void map_insert_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	
+	typename T::iterator it;
+	typename K::iterator ik;
+
+	typename T::iterator it2;
+	typename K::iterator ik2;
+	
+	typename T::iterator it3;
+	typename K::iterator ik3;
+	
+	// P("~~~~~~~~ Insert (Single Element) ~~~~~~~~~~");	
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			std::pair<typename T::iterator, bool> aret = a.insert(std::pair<int, int>(i, i*i));
+			std::pair<typename K::iterator, bool> bret = b.insert(std::pair<int, int>(i, i*i));
+
+			if (aret.first->first != bret.first->first 
+			|| aret.first->second != bret.first->second 
+			|| aret.second != bret.second)
+				verif = false;
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			std::pair<typename T::iterator, bool> aret = a.insert(std::pair<int, int>(i, i*i));
+			std::pair<typename K::iterator, bool> bret = b.insert(std::pair<int, int>(i, i*i));
+
+			if (aret.first->first != bret.first->first 
+			|| aret.first->second != bret.first->second 
+			|| aret.second != bret.second)
+				verif = false;
+		}
+		check((verif && compare_map(a, b)), "Function Insert (Single Element)");
+		a.clear();
+		b.clear();
+	}
+	{
+		verif = true;
+		for (int i = 0; i < 10; i++)
+		{
+			a.insert(std::pair<int, int>(i, i*i));
+			b.insert(std::pair<int, int>(i, i*i));
+		}
+		for (int i = 0; i < 15; i++)
+		{
+			typename T::iterator aret = a.insert(a.begin(), std::pair<int, int>(i, i*i));
+			typename K::iterator bret = b.insert(b.begin(), std::pair<int, int>(i, i*i));
+
+			if (aret->first != bret->first 
+			|| aret->second != bret->second) 
+				verif = false;
+		}
+		check((verif && compare_map(a, b)), "Function Insert (Single Element - with Hint)");
+		a.clear();
+		b.clear();
+	}
+	{
+		T a1;
+		K b1;
+		for (int i = 0; i < 20; i++)
+		{
+			a.insert(std::pair<int, int>(i, i*i));
+			b.insert(std::pair<int, int>(i, i*i));
+		}
+		it = a.begin();
+		ik = b.begin();
+		for (int i = 0; i < 5; i++)
+		{
+			it++;
+			ik++;
+		}
+		it2 = it;
+		ik2 = ik;
+		for (int i = 0; i < 8; i++)
+		{
+			it2++;
+			ik2++;
+		}
+		a1.insert(it, it2);
+		b1.insert(ik, ik2);
+		check((compare_map(a1, b1)), "Function Insert (Range Interator)");
+	}
+}
+
+template <class T, class K>
+void map_key_comp_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+
+	typename T::key_compare a_comp = a.key_comp();
+	typename K::key_compare b_comp = b.key_comp();
+
+	a.insert(std::pair<int, int>(12, -12*15));
+	b.insert(std::pair<int, int>(12, -12*15));
+	
+	typename T::iterator at = a.begin();
+	typename K::iterator bt = b.begin();
+	
+	// P("~~~~~~~~ Key_Comp ~~~~~~~~~~");	
+	check(a_comp(at->first, 32) ==  b_comp(bt->first, 32), "Function Key_comp");
+}
+
+template <class T, class K>
+void map_lower_bound_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+
+	for (int i = 0; i < 10; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+	// P("~~~~~~~~ Lower_Bound ~~~~~~~~~~");	
+	check((a.lower_bound(5)->first == b.lower_bound(5)->first 
+		&& a.lower_bound(5)->second == b.lower_bound(5)->second), "Function Lower_Bound");
+}
+
+
+template <class T, class K>
 void merge_t(T const& t, K const& k)
 {
 	T a;
@@ -622,7 +812,7 @@ void merge_t(T const& t, K const& k)
 }
 
 template <class T, class K>
-void operator_at_t(T const& t, K const& k)
+void operator_equal_t(T const& t, K const& k)
 {
 	bool verif = true;
 	std::srand(std::time(nullptr));
@@ -643,6 +833,29 @@ void operator_at_t(T const& t, K const& k)
 	K b1 = b;
 
 	check((compare_container(a1, b1)), "Operator =");	
+}
+
+template <class T, class K>
+void map_operator_equal_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+
+	for (int i = 0; i < 10; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+
+	a[18] = 22;
+	b[18] = 22;
+	a[5] = 32;
+	b[5] = 32;
+	// P("~~~~~~~~ Operator = ~~~~~~~~~~");	
+
+	T a1 = a;
+	K b1 = b;
+	check(compare_map(a1, b1) , "Operator = and Operator []");
 }
 
 template <class T, class K>
@@ -672,6 +885,60 @@ void pop_back_t(T const& t, K const& k)
 	// P("~~~~~~~~ Pop Back ~~~~~~~~~~");	
 	
 	check(verif, "Function Pop_Back");
+}
+
+template <class T, class K>
+void queue_pop_t(T const& t, K const& k)
+{
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	
+	T a;
+	K b;
+	int r;
+	for (int i = 0; i < 100; i++)
+	{
+		r = rand();
+		a.push(r);
+		b.push(r);
+	}
+	for (int i = 0; i < 80; i++)
+	{
+		a.pop();
+		b.pop();
+		if (a.back() != b.back())
+			verif = false;
+	}
+	// P("~~~~~~~~ Pop ~~~~~~~~~~");	
+	
+	check(verif, "Function Pop");
+}
+
+template <class T, class K>
+void stack_pop_t(T const& t, K const& k)
+{
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	
+	T a;
+	K b;
+	int r;
+	for (int i = 0; i < 100; i++)
+	{
+		r = rand();
+		a.push(r);
+		b.push(r);
+	}
+	for (int i = 0; i < 80; i++)
+	{
+		a.pop();
+		b.pop();
+		if (a.top() != b.top())
+			verif = false;
+	}
+	// P("~~~~~~~~ Pop ~~~~~~~~~~");	
+	
+	check(verif, "Function Pop");
 }
 
 template <class T, class K>
@@ -746,6 +1013,48 @@ void push_front_t(T const& t, K const& k)
 	
 	check(verif, "Function Push_Front");
 }
+
+
+template <class T, class K>
+void queue_push_t(T const& t, K const& k)
+{
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	
+	T a;
+	K b;
+	int r;
+	for (int i = 0; i < 100; i++)
+	{
+		r = rand();
+		a.push(r);
+		b.push(r);
+		if (a.back() != b.back())
+			verif = false;
+	}
+	check(verif, "Function Push");
+}
+
+template <class T, class K>
+void stack_push_t(T const& t, K const& k)
+{
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	
+	T a;
+	K b;
+	int r;
+	for (int i = 0; i < 100; i++)
+	{
+		r = rand();
+		a.push(r);
+		b.push(r);
+		if (a.top() != b.top())
+			verif = false;
+	}
+	check(verif, "Function Push");
+}
+
 
 template <class T, class K>
 void remove_t(T const& t, K const& k)
@@ -852,6 +1161,41 @@ void reverse_t(T const& t, K const& k)
 	// P("~~~~~~~~ Remove ~~~~~~~~~~");	
 	
 	check(compare_container(a,b), "Function Reverse");
+}
+
+template <class T, class K>
+void map_size_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	bool verif = true;
+
+	for (int i = 0; i < 10; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+		if (a.size() == b.size())
+			verif = false;
+	}
+	// P("~~~~~~~~ Size ~~~~~~~~~~");	
+	check(verif, "Function Size");
+}
+
+template <class T, class K>
+void queue_size_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	bool verif = true;
+	for (int i = 0; i < 10; i++)
+	{
+		a.push(i*i);
+		b.push(i*i);
+		if (a.size() != b.size())
+			verif = false;
+	}
+	// P("~~~~~~~~ Size ~~~~~~~~~~");	
+	check(verif, "Function Size");
 }
 
 template <class T, class K>
@@ -980,7 +1324,7 @@ void swap_t(T const& t, K const& k)
 	T a1;
 	K b1;
 	int r;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		r = rand() % 100 + 1;
 		a.push_back(r);
@@ -990,7 +1334,7 @@ void swap_t(T const& t, K const& k)
 		if (!compare_container(a, b) || !compare_container(a1, b1) )
 			verif = false;
 	}
-	
+
 	if (!compare_container(a, b) || !compare_container(a1, b1) )
 		verif = false;
 
@@ -1004,6 +1348,7 @@ void swap_t(T const& t, K const& k)
 
 	T a1;
 	K b1;
+	verif = true;
 	int r;
 	for (int i = 0; i < 20; i++)
 	{
@@ -1021,6 +1366,68 @@ void swap_t(T const& t, K const& k)
 	// P("~~~~~~~~ Swap ~~~~~~~~~~");	
 	
 	check(verif, "Function Swap - External");
+	}
+}
+
+template <class T, class K>
+void map_swap_t(T const& t, K const& k)
+{
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	{
+		T a;
+		K b;
+
+		T a1;
+		K b1;
+		int r;
+		for (int i = 0; i < 20; i++)
+		{
+			r = rand() % 100 + 1;
+			a.insert(std::pair<int, int>(r, i));
+			b.insert(std::pair<int, int>(r, i));
+			a.swap(a1);
+			b.swap(b1);
+			if (!compare_map(a, b) || !compare_map(a1, b1) )
+			{
+				show_map(a1);
+				show_map(b1);
+				verif = false;
+				break ;
+			}
+		}
+		if (!compare_map(a, b) || !compare_map(a1, b1) )
+			verif = false;
+
+		// P("~~~~~~~~ Swap ~~~~~~~~~~");	
+		
+		check(verif, "Function Swap- Internal");
+	}
+	std::srand(std::time(nullptr));
+	{
+		T a;
+		K b;
+
+		T a1;
+		K b1;
+		int r;
+		verif = true;
+		for (int i = 0; i < 20; i++)
+		{
+			r = rand() % 100 + 1;
+			a.insert(std::pair<int, int>(r, i));
+			b.insert(std::pair<int, int>(r, i));
+			swap(a, a1);
+			swap(b, b1);
+			if (!compare_map(a, b) || !compare_map(a1, b1) )
+				verif = false;
+		}
+		if (!compare_map(a, b) || !compare_map(a1, b1) )
+			verif = false;
+
+		// P("~~~~~~~~ Swap ~~~~~~~~~~");	
+		
+		check(verif, "Function Swap- External");
 	}
 }
 
@@ -1067,6 +1474,23 @@ void sort_t(T const& t, K const& k)
 }
 
 template <class T, class K>
+void stack_top_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	bool verif = true;
+	// P("~~~~~~~~ Front ~~~~~~~~~~");	
+	for (size_t i = 0; i < 5; i++)
+	{
+		a.push(i * i);
+		b.push(i * i);
+		if (a.top() != b.top())
+			verif = false;
+	}
+	check(verif, "Function Top");
+}
+
+template <class T, class K>
 void unique_t(T const& t, K const& k)
 {
 	bool verif = true;
@@ -1105,6 +1529,45 @@ void unique_t(T const& t, K const& k)
 		check(compare_container(a,b), "Function Unique with Function");
 	}	
 }
+
+template <class T, class K>
+void map_upper_bound_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+
+	for (int i = 0; i < 10; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+	// P("~~~~~~~~ Upper_Bound ~~~~~~~~~~");	
+	check((a.upper_bound(5)->first == b.upper_bound(5)->first 
+		&& a.upper_bound(5)->second == b.upper_bound(5)->second), "Function Upper_Bound");
+}
+
+template <class T, class K>
+void map_value_comp_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+
+	for (int i = 0; i < 10; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+	typename T::iterator it = a.begin();
+	typename T::iterator it2(it++);
+	typename K::iterator ik = b.begin();
+	typename K::iterator ik2(ik++);
+	// P("~~~~~~~~ Value_Comp ~~~~~~~~~~");	
+	check((a.value_comp()(*it , *it2) == b.value_comp()(*ik, *ik2)  
+	&& a.value_comp()(*it2, *it) == b.value_comp()(*ik2, *ik)
+	&& a.value_comp()(*it, *it) == b.value_comp()(*ik, *ik)
+	), "Function Value_Comp");
+}
+
 
 template <class T, class K>
 void iterator_t(T const& t, K const& k)
@@ -1169,7 +1632,7 @@ void r_iterator_t(T const& t, K const& k)
 		if (*it != *ik)
 			verif = false;
 	}
-	check(verif, "Iterator Check");
+	check(verif, "Reverse Iterator Check");
 }
 
 template <class T, class K>
@@ -1190,6 +1653,30 @@ void comp_t(T const& t, K const& k)
 		r = rand();
 		a.push_back(r);
 		b.push_back(r);
+	}
+	check(((a == a1) == (b == b1)) , "Operator == ");
+	check(((a != a1) == (b != b1)) , "Operator != ");
+	check(((a < a1) == (b < b1)) , "Operator <");
+	check(((a <= a1) == (b <= b1)) , "Operator <=");
+	check(((a > a1) == (b > b1)) , "Operator > ");
+	check(((a >= a1) == (b >= b1)) , "Operator >=");
+}
+
+template <class T, class K>
+void queue_comp_t(T const& t, K const& k)
+{
+	T a;
+	T a1;
+	K b;
+	K b1;
+	int r;
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	for (size_t i = 0; i < 100; i++)
+	{
+		r = rand();
+		a.push(r);
+		b.push(r);
 	}
 	check(((a == a1) == (b == b1)) , "Operator == ");
 	check(((a != a1) == (b != b1)) , "Operator != ");
@@ -1346,5 +1833,158 @@ void r_iterator_comp_t_bd(T const& t, K const& k)
 	check(((--ik == --ik2) == (--it == --it2)) , "Reverse Iterator Operator --it");
 	check(((ik != ik2) == (it != it2)) , "Reverse Iterator Operator != ");
 }
+
+
+template <class T, class K>
+void map_iterator_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	int r;
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	typename T::iterator it;
+	typename K::iterator ik;
+	
+	for (int i = 0; i < 20; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+	for (size_t i = 0; i < 20; i++)
+	{
+		it = a.begin();
+		ik = b.begin();
+		r = rand() % (a.size() - 1);
+		for (int j = 0; j < r; j++)
+		{
+			it++;
+			ik++;
+		}
+		if (*it != *ik)
+			verif = false;
+	}
+	check(verif, "Iterator Check");
+}
+
+template <class T, class K>
+void map_r_iterator_t(T const& t, K const& k)
+{
+	T a;
+	K b;
+	int r;
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	typename T::reverse_iterator it;
+	typename K::reverse_iterator ik;
+	
+	for (int i = 0; i < 20; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+	for (size_t i = 0; i < 20; i++)
+	{
+		it = a.rbegin();
+		ik = b.rbegin();
+		r = rand() % (a.size() - 1);
+		for (int j = 0; j < r; j++)
+		{
+			it++;
+			ik++;
+		}
+		if (*it != *ik)
+			verif = false;
+	}
+	check(verif, "Reverse Iterator Check");
+}
+
+
+template <class T, class K>
+void map_comp_t(T const& t, K const& k)
+{
+	T a;
+	T a1;
+	K b;
+	K b1;
+	for (int i = 0; i < 10; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+	check(((a == a1) == (b == b1)) , "Operator == ");
+	check(((a != a1) == (b != b1)) , "Operator != ");
+	check(((a < a1) == (b < b1)) , "Operator <");
+	check(((a <= a1) == (b <= b1)) , "Operator <=");
+	check(((a > a1) == (b > b1)) , "Operator > ");
+	check(((a >= a1) == (b >= b1)) , "Operator >=");
+}
+
+template <class T, class K>
+void map_iterator_comp_t_bd(T const& t, K const& k)
+{
+	T a;
+	K b;
+	int r;
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	
+	for (int i = 0; i < 20; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+
+	typename T::iterator it = a.begin();
+	typename T::iterator it2(it);
+	typename K::iterator ik = b.begin();
+	typename K::iterator ik2(ik);
+
+	for (int j = 0; j < 5; j++)
+	{
+		it++;
+		ik++;
+	}
+	check(((ik == ik2) == (it == it2)) , "Iterator Operator == ");
+	check(((ik++ == ik2++) == (it++ == it2++)) , "Iterator Operator it++ ");
+	check(((++ik == ++ik2) == (++it == ++it2)) , "Iterator Operator ++it");
+	check(((ik-- == ik2--) == (it-- == it2--)) , "Iterator Operator it-- ");
+	check(((--ik == --ik2) == (--it == --it2)) , "Iterator Operator --it");
+	check(((ik != ik2) == (it != it2)) , "Iterator Operator != ");
+}
+
+template <class T, class K>
+void map_r_iterator_comp_t_bd(T const& t, K const& k)
+{
+	T a;
+	K b;
+	int r;
+	bool verif = true;
+	std::srand(std::time(nullptr));
+	
+	for (int i = 0; i < 20; i++)
+	{
+		a.insert(std::pair<int, int>(i, i*i));
+		b.insert(std::pair<int, int>(i, i*i));
+	}
+
+	typename T::reverse_iterator it = a.rbegin();
+	typename T::reverse_iterator it2(it);
+	typename K::reverse_iterator ik = b.rbegin();
+	typename K::reverse_iterator ik2(ik);
+
+	for (int j = 0; j < 5; j++)
+	{
+		it++;
+		ik++;
+	}
+	check(((ik == ik2) == (it == it2)) , "Reverse Iterator Operator == ");
+	check(((ik++ == ik2++) == (it++ == it2++)) , "Reverse Iterator Operator it++ ");
+	check(((++ik == ++ik2) == (++it == ++it2)) , "Reverse Iterator Operator ++it");
+	check(((ik-- == ik2--) == (it-- == it2--)) , "Reverse Iterator Operator it-- ");
+	check(((--ik == --ik2) == (--it == --it2)) , "Reverse Iterator Operator --it");
+	check(((ik != ik2) == (it != it2)) , "Reverse Iterator Operator != ");
+}
+
 
 #	endif

@@ -223,40 +223,10 @@ namespace ft
 
 			iterator		insert (iterator position, const value_type& val)	// single element
 			{
-				t_map	*n;
-				t_map	*prev = nullptr;
-				t_map	*elem = this->_map;
 				(void)position;
-				
-				while (elem->next && key_compare()(val.first, elem->value->first))
-				{
-					prev = elem;
-					elem = elem->next;
-				}
-				if (key_compare()(val.first, elem->value->first) == key_compare()(elem->value->first, val.first))
-					return iterator(elem);
-				else
-				{
-					_size++;
-					n = new t_map;
-					n->value = new value_type(val);
-					elem->prev = n;
-					n->next = elem;
-					n->prev = nullptr;
-					if (prev == nullptr)
-					{
-						_map = n;
-						return (iterator(_map));
-					}
-					else
-					{
-						prev->next = n;
-						n->prev = prev;
-					}
-					return (iterator(n));	
-				}
+				std::pair<iterator, bool> ret = this->insert(val);
+				return (ret.first);
 			}
-
 
 			std::pair<iterator, bool>	insert (const value_type& val)	// fill
 			{
@@ -264,7 +234,7 @@ namespace ft
 				t_map	*prev = nullptr;
 				t_map	*elem = this->_map;
 				
-				while (elem->next && !Compare()(val.first, elem->value->first))
+				while (elem->next && Compare()(elem->value->first, val.first) && Compare()(val.first, elem->value->first) != Compare()(elem->value->first, val.first))
 				{
 					prev = elem;
 					elem = elem->next;

@@ -172,7 +172,7 @@ int main(void)
 	erase_t(a, b);
 	front_t(a, b);
 	insert_t(a, b);
-	operator_at_t(a, b);
+	operator_equal_t(a, b);
 	pop_back_t(a, b);
 	push_back_t(a, b);
 	re_size_t(a, b);

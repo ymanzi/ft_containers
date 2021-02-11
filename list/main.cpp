@@ -19,7 +19,7 @@ int main(void)
 	insert_t(a, b);
 	sort_t(a, b);
 	merge_t(a, b);
-	operator_at_t(a, b);
+	operator_equal_t(a, b);
 	pop_back_t(a, b);
 	pop_front_t(a, b);
 	push_back_t(a, b);
