@@ -2,7 +2,7 @@
 #	define STACK_HPP
 
 #include <iostream>
-#include <deque>
+#include "../main_header.hpp"
 
 namespace ft 
 {
@@ -35,6 +35,6 @@ namespace ft
 			bool operator>  (const stack<T,Container>& rhs) {return (_cont > rhs._cont);} 
 			bool operator>= (const stack<T,Container>& rhs) {return (_cont >= rhs._cont);} 
 	};
-}
+};
 
 #	endif

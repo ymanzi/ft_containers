@@ -1,15 +1,17 @@
 #	ifndef TEST_HPP
 #	define TEST_HPP
 
+#include "../main_header.hpp"
 #include <iostream>
 #include <string>
 #include <cmath>
 #include <map>
-#include "../map/map.hpp"
 #include <vector>
 #include <list>
+#include <stack>
+#include <queue>
+#include <deque>
 #include <utility>
-
 
 #define NC "\e[0m"
 #define RED "\e[0;31m"

@@ -2,7 +2,7 @@
 #	define QUEUE_HPP
 
 #include <iostream>
-#include <deque>
+#include "../main_header.hpp"
 
 namespace ft 
 {
@@ -37,6 +37,6 @@ namespace ft
 			bool operator>= (const queue<T,Container>& rhs) {return (_cont >= rhs._cont);} 
 	};
 
-}
+};
 
 #	endif
