@@ -1243,7 +1243,7 @@ void map_size_t(T const& t, K const& k)
 	{
 		a.insert(std::pair<int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
-		if (a.size() == b.size())
+		if (a.size() != b.size())
 			verif = false;
 	}
 	// P("~~~~~~~~ Size ~~~~~~~~~~");	

@@ -1,6 +1,6 @@
 
-#	ifndef MAIN_HEADER_HPP
-#	define MAIN_HEADER_HPP
+#	ifndef MAIN_HEAD_HPP
+#	define MAIN_HEAD_HPP
 
 #include "map/map.hpp"
 #include "list/list.hpp"

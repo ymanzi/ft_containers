@@ -154,7 +154,6 @@ namespace ft
 				size_t	elem = (size_t)(get_indice(position));
 				if (_size + 2 >= _max_size)
 					new_size(_size + 5);
-				size_t	i = 0;
 				vector	n(*this);
 				_vector[elem] = val;
 				for (size_t i = 0; elem + i < _size; i++)
