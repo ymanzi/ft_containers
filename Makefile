@@ -22,11 +22,11 @@ MAKE_C						=  " $(COLOR_LIGHT_MAGENTA)[ FCLEAN ]"
 
 CXX = clang++
 CXXFLAGS = -Wall -Wextra -Werror
-S_SRCS = stack/main.cpp
-L_SRCS = list/main.cpp
-V_SRCS = vector/main.cpp
-Q_SRCS = queue/main.cpp
-M_SRCS = map/main.cpp
+S_SRCS = utils/stack.cpp
+L_SRCS = utils/list.cpp
+V_SRCS = utils/vector.cpp
+Q_SRCS = utils/queue.cpp
+M_SRCS = utils/map.cpp
 STACK = stack_t
 QUEUE = queue_t
 LIST = list_t
