@@ -10,33 +10,69 @@
 #                                                                              #
 # **************************************************************************** #
 
+
+COLOR_RESET						= \x1b[0m
+COLOR_LIGHT_GREEN				= \x1b[92m
+COLOR_LIGHT_YELLOW				= \x1b[93m
+COLOR_LIGHT_MAGENTA				= \x1b[95m
+COLOR_WHITE						= \x1b[97m
+
+MAKE_B						=  " $(COLOR_LIGHT_MAGENTA)\n[$(COLOR_LIGHT_GREEN) MAKE TEST $(COLOR_LIGHT_MAGENTA)] "
+MAKE_C						=  " $(COLOR_LIGHT_MAGENTA)[ FCLEAN ]"
+
 CXX = clang++
-CXXFLAGS = -Wall -Wextra -Werror 
+CXXFLAGS = -Wall -Wextra -Werror
+S_SRCS = stack/main.cpp
+L_SRCS = list/main.cpp
+V_SRCS = vector/main.cpp
+Q_SRCS = queue/main.cpp
+M_SRCS = map/main.cpp
+STACK = stack_t
+QUEUE = queue_t
+LIST = list_t
+VECTOR = vector_t
+MAP = map_t
 
 all: stack queue list map vector
 
-stack:
-	$(CXX) $(CXXFLAGS) stack/main.cpp -o stack
-	./stack
+stack: $(STACK)
 
-queue:
-	$(CXX) $(CXXFLAGS) queue/main.cpp -o queue
-	./queue
+$(STACK):
+	@echo $(MAKE_B) "$(COLOR_WHITE) $(COLOR_LIGHT_YELLOW) STACK $(COLOR_RESET)"
+	@$(CXX) $(CXXFLAGS) $(S_SRCS) -o $(STACK)
+	@./$(STACK)
 
-list:
-	$(CXX) $(CXXFLAGS) list/main.cpp -o list
-	./list
+queue: $(QUEUE)
 
-map:
-	$(CXX) $(CXXFLAGS) map/main.cpp -o map
-	./map
+$(QUEUE):
+	@echo $(MAKE_B) "$(COLOR_WHITE) $(COLOR_LIGHT_YELLOW) QUEUE $(COLOR_RESET)"
+	@$(CXX) $(CXXFLAGS) $(Q_SRCS) -o $(QUEUE)
+	@./$(QUEUE)
 
-vector:
-	$(CXX) $(CXXFLAGS) vector/main.cpp -o vector
-	./vector
+list: $(LIST)
+
+$(LIST):
+	@echo $(MAKE_B) "$(COLOR_WHITE) $(COLOR_LIGHT_YELLOW) LIST $(COLOR_RESET)"
+	@$(CXX) $(CXXFLAGS) $(L_SRCS) -o $(LIST)
+	@./$(LIST)
+
+map: $(MAP)
+
+$(MAP):
+	@echo $(MAKE_B) "$(COLOR_WHITE) $(COLOR_LIGHT_YELLOW) MAP $(COLOR_RESET)"
+	@$(CXX) $(CXXFLAGS) $(M_SRCS) -o $(MAP)
+	@./$(MAP)
+
+vector: $(VECTOR)
+
+$(VECTOR):
+	@echo $(MAKE_B) "$(COLOR_WHITE) $(COLOR_LIGHT_YELLOW) VECTOR $(COLOR_RESET)"
+	@$(CXX) $(CXXFLAGS) $(V_SRCS) -o $(VECTOR)
+	@./$(VECTOR)
 
 clean:
-	rm -f stack queue list map vector
+	@echo $(MAKE_C)  "$(COLOR_RESET)"
+	@rm -f $(LIST) $(QUEUE) $(STACK) $(VECTOR) $(MAP)
 
 fclean: clean
 

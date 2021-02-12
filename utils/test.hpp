@@ -36,7 +36,7 @@ void end_check(bool val, std::string const& msg)
 {
 	std::cout << msg;
 	if (val)
-		P(GRN " [CORRECT]" NC);
+		P(GRN " [PERFECT]" NC);
 	else
 		P(RED "[K.O]" NC);
 }
