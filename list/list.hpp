@@ -31,9 +31,9 @@ namespace ft
 				_size = 0;
 
 				_list = new t_list;
-				_list->prev = nullptr;
+				_list->prev = NULL;
 				_list->value = T();
-				_list->next = nullptr;
+				_list->next = NULL;
 			}
 
 			bool	is_in_list(T const& val)
@@ -131,11 +131,11 @@ namespace ft
 				}
 			}
 			
-			explicit list(void): _size(0), _list(nullptr) { init_list();} // default constructor
+			explicit list(void): _size(0), _list(NULL) { init_list();} // default constructor
 			explicit list (size_type n, const value_type& val = value_type()): _size(0){ init_list(); while (n--) push_back(val); } // fill constructor
 			
 			template <class InputIterator>
-			list (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
+			list (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
 			list (const list& x): _size(0) { init_list(); *this = x;} // Copy constructor
 
 			template <class InputIterator>
@@ -244,7 +244,7 @@ namespace ft
 					insert(position, val);
 			}
 			template <class InputIterator>
-    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
+    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL)  // range
 			{
 				while (first != last)
 				{
@@ -259,7 +259,10 @@ namespace ft
 				{
 					list	n(*this);
 					if (x.size())
+					{
 						n.insert(n.begin(), x.begin(), x.end());
+						x.clear();
+					}
 					n.sort();
 					*this = n;
 				}
@@ -311,7 +314,7 @@ namespace ft
 					elem = _list;
 					_size--;
 					_list = elem->next;
-					elem->next->prev = nullptr;
+					elem->next->prev = NULL;
 					delete elem;
 				}
 			}
@@ -342,7 +345,7 @@ namespace ft
 				n = new t_list;
 				n->next = _list;
 				n->value = val;
-				n->prev = nullptr;
+				n->prev = NULL;
 				_list->prev = n;
 				_list = n;
 			}
@@ -550,7 +553,7 @@ namespace ft
 	template <class T>
 	bool	operator< (const list<T>& lhs, const list<T>& rhs)
 	{
-		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T>

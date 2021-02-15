@@ -13,7 +13,7 @@ namespace Vector
 
 		public:
 			T*		get_vector() {return this->_vector;}
-			iterator(void): _vector(nullptr) {}
+			iterator(void): _vector(NULL) {}
 			iterator(void* p_vector): _vector(static_cast<T *>(p_vector)) {} // compilation error if the cast fails
 			iterator(const iterator<T>& oth) { *this = oth;}
 			virtual ~iterator(void) {}
@@ -39,14 +39,14 @@ namespace Vector
 			{
 				iterator<T> tmp(*this);
 				for (size_t i = 0; i < n; i++)
-					operator++();
+					tmp.operator++();
 				return (tmp);
 			}
 			iterator	operator- (const size_t n) // equal to ++var
 			{
 				iterator<T>	tmp(*this);
 				for (size_t i = 0; i < n; i++)
-					operator--();
+					tmp.operator--();
 				return (tmp);
 			}
 

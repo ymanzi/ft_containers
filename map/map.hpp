@@ -28,8 +28,8 @@ namespace ft
 			{ 
 				_size = 0;
 				_map = new t_map;
-				_map->next = nullptr;
-				_map->prev = nullptr;
+				_map->next = NULL;
+				_map->prev = NULL;
 				_map->value = new std::pair<const Key, T>();
 			}		
 		public:
@@ -65,9 +65,9 @@ namespace ft
 					}
 			};
 			
-			explicit map(void): _size(0), _map(nullptr) { init_map();} // default constructor
+			explicit map(void): _size(0), _map(NULL) { init_map();} // default constructor
 			template <class InputIterator>
-			map (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr): _size(0) { init_map(); while (first != last) this->insert(*first++); } // range constructor
+			map (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL): _size(0) { init_map(); while (first != last) this->insert(*first++); } // range constructor
 			map (const map& x): _size(0) { init_map(); *this = x;} // Copy constructor
 			virtual ~map()
 			{
@@ -158,8 +158,8 @@ namespace ft
 			size_type	erase (const key_type& k)
 			{
 				t_map	*elem = _map;
-				t_map	*prev = nullptr;
-				t_map	*next = nullptr;
+				t_map	*prev = NULL;
+				t_map	*next = NULL;
 
 				while (elem->next)
 				{
@@ -167,7 +167,7 @@ namespace ft
 					{
 						_size--;
 						next = elem->next;
-						if (prev == nullptr)
+						if (prev == NULL)
 						{
 							_map = next;
 							delete elem;
@@ -231,7 +231,7 @@ namespace ft
 			std::pair<iterator, bool>	insert (const value_type& val)	// fill
 			{
 				t_map	*n;
-				t_map	*prev = nullptr;
+				t_map	*prev = NULL;
 				t_map	*elem = this->_map;
 				
 				while (elem->next && Compare()(elem->value->first, val.first) && Compare()(val.first, elem->value->first) != Compare()(elem->value->first, val.first))
@@ -248,8 +248,8 @@ namespace ft
 					n->value = new value_type(val);
 					elem->prev = n;
 					n->next = elem;
-					n->prev = nullptr;
-					if (prev == nullptr)
+					n->prev = NULL;
+					if (prev == NULL)
 						_map = n;
 					else
 					{
@@ -261,7 +261,7 @@ namespace ft
 			}
 
 			template <class InputIterator>
-    		void 		insert (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
+    		void 		insert (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL)  // range
 			{
 				while (first != last)
 					this->insert(*first++);

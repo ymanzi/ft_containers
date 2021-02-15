@@ -36,7 +36,7 @@ namespace ft
 				for ( ; i < n; i++)
 					n_vec[i] = val;
 				_max_size = n;
-				delete _vector;
+				delete[] _vector;
 				_vector = n_vec;
 			}
 
@@ -74,13 +74,13 @@ namespace ft
 			virtual ~vector()
 			{
 				_size = 0;
-				delete _vector;
+				delete[] _vector;
 			}
 
 			explicit vector(void): _size(0) { init_vector();} // default constructor
 			explicit vector (size_type n, const value_type& val = value_type()) { init_vector(n, val); _size = n;} // fill constructor
 			template <class InputIterator>
-			vector (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr) { init_vector(); this->insert(this->begin(), first, last); } // range constructor
+			vector (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = nullptr) { init_vector(); _size = 0; while (first != last) this->push_back(*first++); } // range constructor
 			vector (const vector& x)
 			{
 				init_vector(); _size = 0;
@@ -89,10 +89,11 @@ namespace ft
 			} // Copy constructor
 
 			template <class InputIterator>
-  			void 				assign (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr) // range
+  			void 				assign (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = nullptr) // range
 			{
 				_size = 0;
-				this->insert(this->begin(), first, last);
+				while (first != last)
+					this->push_back(*first++);
 			}
 			
 			void assign (size_type n, const value_type& val) { this->resize(n); for (size_t i = 0; i < n; i++) (*this)[i] = val; } //Fill
@@ -109,7 +110,7 @@ namespace ft
 			size_type			capacity() const {return _max_size;}
 			void 				clear()
 			{
-				delete _vector;
+				delete[] _vector;
 				init_vector();
 				_size = 0;
 			}
@@ -140,8 +141,9 @@ namespace ft
 				_size -= (elem_l - elem_f);
 				return (last);
 			}
+
 			reference			front() {return (_vector[0]);}
-			const_reference		front() const {return (const_cast<const_reference>(front()));}
+			const_reference		front() const {return _vector[0];}
 			iterator			insert (iterator position, const value_type& val)	// single element
 			{
 				if (position == this->end())
@@ -151,15 +153,15 @@ namespace ft
 				}
 				else
 				{
-				size_t	elem = (size_t)(get_indice(position));
-				if (_size + 2 >= _max_size)
-					new_size(_size + 5);
-				vector	n(*this);
-				_vector[elem] = val;
-				for (size_t i = 0; elem + i < _size; i++)
-					_vector[elem + i + 1] = n._vector[elem + i];
-				_size++;
-				return iterator(_vector + elem);
+					size_t	elem = (size_t)(get_indice(position));
+					if (_size + 2 >= _max_size)
+						new_size(_size + 5);
+					vector	n(*this);
+					_vector[elem] = val;
+					for (size_t i = 0; elem + i < _size; i++)
+						_vector[elem + i + 1] = n._vector[elem + i];
+					_size++;
+					return iterator(_vector + elem);
 				}
 			}
 			
@@ -170,13 +172,20 @@ namespace ft
 			}
 
 			template <class InputIterator>
-    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_integral<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
+    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
 			{
-				while (first != last)
-				{
-					position = insert(position, *first);
-					++first;
-				}
+				size_t tmp_size = 0;
+				InputIterator tmp(first);
+				while (tmp++ != last)
+					tmp_size++;
+				T v[tmp_size];
+				tmp_size = 0;
+				tmp = first;
+				while (tmp != last)
+					v[tmp_size++] = *tmp++;
+				tmp_size = 0;
+				while (first++ != last)
+					position = insert(position, v[tmp_size++]);
 			}
 			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(T));}
 
@@ -249,7 +258,7 @@ namespace ft
 	template <class T>
 	bool	operator< (const vector<T>& lhs, const vector<T>& rhs)
 	{
-		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T>

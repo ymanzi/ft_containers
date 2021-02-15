@@ -28,7 +28,7 @@ namespace List
 
 			t_list	*_list;
 		public:
-			iterator(void): _list(nullptr) {}
+			iterator(void): _list(NULL) {}
 			iterator(void* p_list): _list(static_cast<t_list *>(p_list)) {} // compilation error if the cast fails
 			iterator(const iterator<T>& oth) { *this = oth;}
 			virtual ~iterator(void) {}
@@ -44,7 +44,7 @@ namespace List
 			bool		operator!= (const iterator<T>& oth) const {return (_list != oth._list);}
 			iterator&	operator++ () // equal to ++var
 			{
-				if (_list->next == nullptr)
+				if (_list->next == NULL)
 					this->begin();
 				else
 					_list = _list->next;
@@ -61,7 +61,7 @@ namespace List
 
 			iterator&	operator-- () // equal to --var
 			{
-				if (_list->prev == nullptr)
+				if (_list->prev == NULL)
 					this->end();
 				else
 					_list = _list->prev;

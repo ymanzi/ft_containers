@@ -22,7 +22,7 @@ namespace Map
 
 			static const bool input_iter = true;
 
-			iterator(void): _map(nullptr) {}
+			iterator(void): _map(NULL) {}
 			iterator(void* p_map): _map(static_cast<t_map *>(p_map)) {} // compilation error if the cast fails
 			iterator(const iterator& oth) { *this = oth;}
 			virtual ~iterator(void) {}
@@ -41,7 +41,7 @@ namespace Map
 			bool		operator!= (const iterator& oth) const {return (_map != oth._map);}
 			iterator&	operator++ () // equal to ++var
 			{
-				if (_map->next == nullptr)
+				if (_map->next == NULL)
 				{
 					while (_map->prev)
 						_map = _map->prev;
@@ -60,7 +60,7 @@ namespace Map
 
 			iterator&	operator-- () // equal to --var
 			{
-				if (_map->prev == nullptr)
+				if (_map->prev == NULL)
 				{
 					while (_map->next)
 						_map = _map->next;
@@ -86,9 +86,9 @@ namespace Map
 			reverse_iterator(void* p_map): iterator<Key, T>(p_map) {} // compilation error if the cast fails
 			reverse_iterator(const reverse_iterator& oth): iterator<Key, T>() { this->_map = oth._map;}
 			virtual ~reverse_iterator(void) {}
-			reverse_iterator&	operator++ () { if (this->_map->prev == nullptr){ while (this->_map->next) this->_map = this->_map->next;}  else this->_map = this->_map->prev; return (*this);} // equal to ++var
+			reverse_iterator&	operator++ () { if (this->_map->prev == NULL){ while (this->_map->next) this->_map = this->_map->next;}  else this->_map = this->_map->prev; return (*this);} // equal to ++var
 			reverse_iterator	operator++ (int) { reverse_iterator tmp(*this); operator++(); return tmp;} // the (int) means that ++ is after the var // equal to var++
-			reverse_iterator&	operator-- () { if (this->_map->next == nullptr) { while (this->_map->prev) this->_map = this->_map->prev;} else this->_map = this->_map->next; return (*this);} // equal to --var
+			reverse_iterator&	operator-- () { if (this->_map->next == NULL) { while (this->_map->prev) this->_map = this->_map->prev;} else this->_map = this->_map->next; return (*this);} // equal to --var
 			reverse_iterator	operator-- (int) { reverse_iterator tmp(*this); operator--(); return tmp;} // equal to var--
 	};
 }
