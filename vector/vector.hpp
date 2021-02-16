@@ -188,7 +188,6 @@ namespace ft
 			}
 			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(T));}
 
-			#define P(x) std::cout << std::boolalpha << x << std::endl
 			vector& 				operator= (const vector& oth)
 			{
 				_size = 0;

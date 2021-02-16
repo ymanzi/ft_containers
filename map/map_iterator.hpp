@@ -30,13 +30,14 @@ namespace Map
 			t_map*			get_map(void) {return (_map);}
 			value_type&		operator* (void) {return (*(this->_map->value));}
 
-			ft::pair<const Key, T>		*operator->(void) {return this->_map->value;}
+			value_type		*operator->(void) {return this->_map->value;}
 
 			iterator&		operator= (const iterator& oth)
 			{
 				_map = oth._map;
 				return (*this);
 			}
+
 			bool		operator== (const iterator& oth) const {return (_map == oth._map);}
 			bool		operator!= (const iterator& oth) const {return (_map != oth._map);}
 			iterator&	operator++ () // equal to ++var

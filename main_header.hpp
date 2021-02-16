@@ -13,5 +13,6 @@
 #include <stack>
 #include <queue>
 #include <deque>
+#define P(x) std::cout << std::boolalpha << x << std::endl
 
 #	endif

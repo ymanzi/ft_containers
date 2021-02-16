@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <limits>
-#include "map_iterator.hpp"
 #include "../utils/ft_utils.hpp"
+#include "map_iterator.hpp"
 
 namespace ft
 {
@@ -65,7 +65,7 @@ namespace ft
 			
 			explicit map(void): _size(0), _map(NULL) { init_map();} // default constructor
 			template <class InputIterator>
-			map (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL): _size(0) { init_map(); while (first != last) this->insert(*first++); } // range constructor
+			map (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_not_iterator<InputIterator>::value, std::nullptr_t>::type = NULL): _size(0) { init_map(); while (first != last) this->insert(*first++); } // range constructor
 			map (const map& x): _size(0) { init_map(); *this = x;} // Copy constructor
 			virtual ~map()
 			{
@@ -259,7 +259,7 @@ namespace ft
 			}
 
 			template <class InputIterator>
-    		void 		insert (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL)  // range
+    		void 		insert (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_not_iterator<InputIterator>::value, std::nullptr_t>::type = NULL)  // range
 			{
 				while (first != last)
 					this->insert(*first++);
