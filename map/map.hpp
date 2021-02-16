@@ -4,13 +4,11 @@
 #include <iostream>
 #include <limits>
 #include "map_iterator.hpp"
-#include "../utils/lexicographical_compare.hpp"
-#include "../utils/enable_if.hpp"
-#include <utility>
+#include "../utils/ft_utils.hpp"
 
 namespace ft
 {
-	template < class Key, class T, class Compare = std::less<Key> >
+	template < class Key, class T, class Compare = ft::less<Key> >
 	class map
 	{
 		private:
@@ -18,7 +16,7 @@ namespace ft
 			{
 				struct s_map			*prev;
 				struct s_map			*next;
-				std::pair<const Key, T>	*value;
+				pair<const Key, T>	*value;
 			}				t_map;
 
 			size_t	_size;
@@ -30,10 +28,10 @@ namespace ft
 				_map = new t_map;
 				_map->next = NULL;
 				_map->prev = NULL;
-				_map->value = new std::pair<const Key, T>();
+				_map->value = new ft::pair<const Key, T>();
 			}		
 		public:
-			typedef	std::pair<const Key, T>		value_type;
+			typedef	ft::pair<const Key, T>		value_type;
 			typedef value_type&					reference;
 			typedef const value_type&			const_reference;
 			typedef value_type*					pointer;
@@ -49,7 +47,7 @@ namespace ft
 			typedef Map::reverse_iterator<key_type, mapped_type>		reverse_iterator;
 			typedef const Map::reverse_iterator<key_type, mapped_type>	const_reverse_iterator;
 			
-			class value_compare: public std::binary_function<value_type,value_type,bool>
+			class value_compare//: public std::binary_function<value_type,value_type,bool>
 			{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
 				protected:
 					Compare comp;
@@ -120,7 +118,7 @@ namespace ft
 				return (const_iterator(elem));
 			}
 
-			std::pair<iterator,iterator>    equal_range (const key_type& k)
+			ft::pair<iterator,iterator>    equal_range (const key_type& k)
 			{
 				iterator	it;
 				iterator	it2 = begin();
@@ -131,10 +129,10 @@ namespace ft
 						break ;
 				}
 				it = it2++;
-				return  std::pair<iterator, iterator>(it, it2);
+				return  ft::pair<iterator, iterator>(it, it2);
 			}
 
-			std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+			ft::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 			{
 				bool found = false;
 				iterator	it;
@@ -152,7 +150,7 @@ namespace ft
 					it = it2++;
 				else
 					it = it2;
-				return  std::pair<const_iterator, const_iterator>(it, it2);
+				return  ft::pair<const_iterator, const_iterator>(it, it2);
 			}
 
 			size_type	erase (const key_type& k)
@@ -224,11 +222,11 @@ namespace ft
 			iterator		insert (iterator position, const value_type& val)	// single element
 			{
 				(void)position;
-				std::pair<iterator, bool> ret = this->insert(val);
+				ft::pair<iterator, bool> ret = this->insert(val);
 				return (ret.first);
 			}
 
-			std::pair<iterator, bool>	insert (const value_type& val)	// fill
+			ft::pair<iterator, bool>	insert (const value_type& val)	// fill
 			{
 				t_map	*n;
 				t_map	*prev = NULL;
@@ -240,7 +238,7 @@ namespace ft
 					elem = elem->next;
 				}
 				if (elem->next && Compare()(val.first, elem->value->first) == Compare()(elem->value->first, val.first))
-					return  std::pair<iterator, bool>(iterator(elem), false);
+					return  ft::pair<iterator, bool>(iterator(elem), false);
 				else
 				{
 					_size++;
@@ -256,7 +254,7 @@ namespace ft
 						prev->next = n;
 						n->prev = prev;
 					}
-					return std::pair<iterator, bool>(iterator(n), true);	
+					return ft::pair<iterator, bool>(iterator(n), true);	
 				}
 			}
 
@@ -392,7 +390,7 @@ namespace ft
 	template < class Key, class T>
 	bool	operator< (const map<Key, T>& lhs, const map<Key, T>& rhs)
 	{
-		return (lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template < class Key, class T>

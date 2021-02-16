@@ -5,8 +5,7 @@
 #include <limits>
 #include <stdexcept>
 #include "vector_iterator.hpp"
-#include "../utils/lexicographical_compare.hpp"
-#include "../utils/enable_if.hpp"
+#include "../utils/ft_utils.hpp"
 
 namespace ft
 {

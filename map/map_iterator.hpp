@@ -13,12 +13,12 @@ namespace Map
 			{
 				struct s_map			*prev;
 				struct s_map			*next;
-				std::pair<const Key, T>	*value;
+				ft::pair<const Key, T>	*value;
 			}				t_map;
 
 			t_map	*_map;
 		public:
-			typedef	std::pair<const Key, T>		value_type;
+			typedef	ft::pair<const Key, T>		value_type;
 
 			static const bool input_iter = true;
 
@@ -30,7 +30,7 @@ namespace Map
 			t_map*			get_map(void) {return (_map);}
 			value_type&		operator* (void) {return (*(this->_map->value));}
 
-			std::pair<const Key, T>		*operator->(void) {return this->_map->value;}
+			ft::pair<const Key, T>		*operator->(void) {return this->_map->value;}
 
 			iterator&		operator= (const iterator& oth)
 			{
