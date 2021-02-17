@@ -16,6 +16,17 @@ namespace ft
 		typedef T type;
 	};
 
+	template <typename T>
+	struct is_iterator
+	{
+		template <typename U>
+    	static char test(typename U::var* x);
+
+    	template <typename U>
+    	static  int test(U* x);
+    	static const bool value = sizeof(test<T>(NULL)) == 1;
+	};
+
 	template<class A>
 	struct less
 	{
@@ -71,27 +82,7 @@ namespace ft
 		return (first2 != last2);
 	};	
 
-	template<class T>
-	struct is_not_iterator
-	{
-		// static bool value;
-		typedef T type;
-		typedef std::true_type value;
-
-		bool val;
-		bool check(std::string const& name)
-		{
-			if (name.find("iterator") != std::string::npos)
-				return (false);
-			return true;
-		}
-		
-		is_not_iterator()
-		{
-			T var;
-			val = check(typeid(var).name());
-		}
-	};
+	
 }
 
 #	endif

@@ -13,12 +13,13 @@ namespace Map
 			{
 				struct s_map			*prev;
 				struct s_map			*next;
-				ft::pair<const Key, T>	*value;
+				ft::pair<Key, T>	*value;
 			}				t_map;
 
 			t_map	*_map;
 		public:
-			typedef	ft::pair<const Key, T>		value_type;
+			typedef	ft::pair<Key, T>		value_type;
+			typedef char	var;
 
 			static const bool input_iter = true;
 

@@ -111,7 +111,6 @@ namespace ft
 			typedef const value_type&			const_reference;
 			typedef value_type*					pointer;
 			typedef const value_type*			const_pointer;
-			typedef ptrdiff_t					difference_type;
 			typedef size_t						size_type;
 
 			typedef List::iterator<value_type>			iterator;
@@ -134,7 +133,7 @@ namespace ft
 			explicit list (size_type n, const value_type& val = value_type()): _size(0){ init_list(); while (n--) push_back(val); } // fill constructor
 			
 			template <class InputIterator>
-			list (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
+			list (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_iterator<InputIterator>::value, char>::type = char() ): _size(0) { init_list(); this->insert(this->begin(), first, last); } // range constructor
 			list (const list& x): _size(0) { init_list(); *this = x;} // Copy constructor
 
 			template <class InputIterator>
@@ -243,7 +242,7 @@ namespace ft
 					insert(position, val);
 			}
 			template <class InputIterator>
-    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = NULL)  // range
+    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<ft::is_iterator<InputIterator>::value, char>::type = char() )  // range
 			{
 				while (first != last)
 				{

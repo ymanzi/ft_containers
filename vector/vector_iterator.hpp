@@ -12,6 +12,7 @@ namespace Vector
 			T*		_vector;
 
 		public:
+			typedef char	var;
 			T*		get_vector() {return this->_vector;}
 			iterator(void): _vector(NULL) {}
 			iterator(void* p_vector): _vector(static_cast<T *>(p_vector)) {} // compilation error if the cast fails

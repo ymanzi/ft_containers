@@ -61,7 +61,12 @@ bool	compare_map(T & t, K & k)
 
 std::string verif(bool elem)
 {
-	return (" Verif: " + std::to_string(elem));
+	std::string value;
+	if (elem)
+		value = "1";
+	else
+		value = "0";
+	return (" Verif: " + value);
 }
 
 void t_stack(void)
@@ -285,8 +290,13 @@ void t_list(void)
 	P(verif( compare_container(s, f) ));
 
 	P("---------> splice <----");
-	s.splice(s.end(), s2, ++(s2.begin()));
-	f.splice(f.end(), f2, ++(f2.begin()));
+	s2.push_back("trois");
+	s2.push_back("quatre");
+	f2.push_back("trois");
+	f2.push_back("quatre");
+
+	s.splice(s.begin(), s2, ++s2.begin());
+	f.splice(f.begin(), f2, ++f2.begin());
 	P(verif(compare_container(s, f)));
 	P(verif(compare_container(s2, f2)));
 
@@ -626,7 +636,7 @@ void t_map(void)
 		std::map<std::string, std::string>::iterator si = s.begin();
 		ft::map<std::string, std::string>::iterator fi = f.begin();
 
-		P(verif( (s.value_comp()(*si, *++si) == f.value_comp()(*fi, *++fi)) ));
+		P( verif( (s.value_comp()(*si, *++si) == f.value_comp()(*fi, *++fi)) ));
 	}
 
 	P("---------> operator[] <----");
@@ -718,6 +728,334 @@ void t_map(void)
 	P("operator '>=' : " << (s >= s2) << verif((s >= s2) == (f >= f2)));
 }
 
+void t_set(void)
+{
+	ft::set<std::string>	f;
+	std::set<std::string>	s;
+	
+	P("~~~~~~~~~~~~~~~ SET ~~~~~~~~~~~~~~~");
+	P("---------> empty <----");
+	P("empty ? " << s.empty() << verif(s.empty() == f.empty()) );
+	P("size = " << s.size() << verif(s.size() == f.size()) );
+
+	P("---------> INSERT <----");
+	s.insert("one");
+	s.insert("two") ;
+	s.insert("three") ;
+	s.insert("four") ;
+	
+	f.insert("one") ;
+	f.insert("two");
+	f.insert("three") ;
+	f.insert("four") ;
+
+	s.insert(s.begin(), s.end());
+	f.insert(f.begin(), f.end());
+	P(verif( compare_container(s, f) ));
+	P("size = " << s.size() << verif(s.size() == f.size()) );
+
+	P("---------> Constructor <----");
+	{
+		ft::set<std::string>	 f2(f);
+		std::set<std::string>	 s2(s);
+		P("Same container" << verif( compare_container(s2, f2) ));
+		P("size = " << s2.size() << verif(s2.size() == f2.size()) );
+	}
+	{
+		ft::set<std::string>	 f2(f.begin(), f.end());
+		std::set<std::string>	 s2(s.begin(), s.end());
+		P("Same container" << verif( compare_container(f2, f) ));
+		// show_container(f2);
+		// show_container(f);
+
+		P("size = " << f2.size() << verif(f.size() == f2.size()) );
+	}
+	P("---------> Operator= <----");
+	{
+		ft::set<std::string>	 f2 = f;
+		std::set<std::string>	 s2 = s;
+		P("Same container" << verif( compare_container(s2, f2) ));
+		P("size = " << s2.size() << verif(s2.size() == f2.size()) );
+	}
+	P("---------> Count <----");
+	P(verif( (s.count("one") == f.count("one") && s.count("lol") == f.count("lol"))  ));
+	
+	P("---------> Equal_Range <----");
+	{
+		std::pair<std::set< std::string>::iterator, std::set< std::string>::iterator> si;
+		ft::pair<ft::set< std::string>::iterator, ft::set< std::string>::iterator> fi; 
+
+		si = s.equal_range("three");
+		fi = f.equal_range("three");
+
+		P(verif( ( *(si.first) == *(fi.first) && *(si.second) == *(fi.second))  ));
+	}
+	P("---------> Lower_Bound <----");
+	{
+		std::set< std::string>::iterator si;
+		ft::set< std::string>::iterator fi;
+
+		si = s.lower_bound("three");
+		fi = f.lower_bound("three");
+
+		P(verif( (*si == *fi)  ));
+	}
+	P("---------> Upper_Bound <----");
+	{
+		std::set< std::string>::iterator si;
+		ft::set< std::string>::iterator fi;
+
+		si = s.upper_bound("three");
+		fi = f.upper_bound("three");
+
+		P(verif( (*si == *fi)  ));
+	}
+	P("---------> Value_Comp <----");
+	{
+		std::set< std::string>::iterator si = s.begin();
+		ft::set< std::string>::iterator fi = f.begin();
+
+		P( verif( (s.value_comp()(*si, *++si) == f.value_comp()(*fi, *++fi)) ));
+	}
+
+	P("---------> erase <----");
+	{
+		std::set< std::string>::iterator si = s.begin();
+		ft::set< std::string>::iterator fi = f.begin();
+		s.erase(si++);
+		f.erase(fi++);
+		si++;
+		fi++;
+
+		std::set< std::string>::iterator si2 = s.begin();
+		ft::set< std::string>::iterator fi2 = f.begin();
+		s.erase(*si2 );
+		f.erase(*fi2 );
+
+		si2 = s.begin();
+		fi2 = f.begin();
+
+		f.erase(fi2, fi);
+		s.erase(si2, si);
+		P(verif( compare_container(s, f) ));
+	}
+	P("---------> swap  <----");
+	{
+		ft::set< std::string>	 f3;
+		std::set< std::string>	 s3;
+		s.swap(s3);
+		f.swap(f3);
+		P(verif(compare_container(s, f)));
+		P(verif(compare_container(s3, f3)));
+
+		swap(s, s3);
+		swap(f, f3);
+	}
+	P("---------> reverse_iterator <----");
+	{
+		ft::set< std::string>::reverse_iterator fi3 = f.rbegin();
+		std::set< std::string>::reverse_iterator si3 = s.rbegin();
+		bool good = true;
+		for (; si3 != s.rend(); si3++)
+		{
+			if (*si3 != *fi3)
+				good = false;
+			fi3++;
+		}
+		verif(good);
+	}
+	P("---------> clear <----");
+	ft::set< std::string>	f2(f);
+	std::set< std::string>	s2(s);
+	
+	f.clear();
+	s.clear();
+	P("empty ? " << s.empty() << verif(s.empty() == f.empty()) );
+	P("size = " << s.size() << verif(s.size() == f.size()) );
+
+	P("---------> operator == <----");
+	P("operator '==' : " << (s == s2) << verif((s == s2) == (f == f2)));
+
+	P("---------> operator != <----");
+	P("operator '!=' : " << (s != s2) << verif((s != s2) == (f != f2)));
+
+	P("---------> operator < <----");
+	P("operator '<' : " << (s < s2) << verif((s < s2) == (f < f2)));
+
+	P("---------> operator <= <----");
+	P("operator '<=' : " << (s <= s2) << verif((s <= s2) == (f <= f2)));
+
+	P("---------> operator > <----");
+	P("operator '>' : " << (s > s2) << verif((s > s2) == (f > f2)));
+
+	P("---------> operator >= <----");
+	P("operator '>=' : " << (s >= s2) << verif((s >= s2) == (f >= f2)));
+}
+
+void t_multiset(void)
+{
+	ft::multiset<std::string>	f;
+	std::multiset<std::string>	s;
+	
+	P("~~~~~~~~~~~~~~~ MULTISET ~~~~~~~~~~~~~~~");
+	P("---------> empty <----");
+	P("empty ? " << s.empty() << verif(s.empty() == f.empty()) );
+	P("size = " << s.size() << verif(s.size() == f.size()) );
+
+	P("---------> INSERT <----");
+	s.insert("one");
+	s.insert("two") ;
+	s.insert("three") ;
+	s.insert("four") ;
+	
+	f.insert("one") ;
+	f.insert("two");
+	f.insert("three") ;
+	f.insert("four") ;
+
+	s.insert(s.begin(), s.end());
+	f.insert(f.begin(), f.end());
+	P(verif( compare_container(s, f) ));
+	P("size = " << s.size() << verif(s.size() == f.size()) );
+
+	P("---------> Constructor <----");
+	{
+		ft::multiset<std::string>	 f2(f);
+		std::multiset<std::string>	 s2(s);
+		P("Same container" << verif( compare_container(s2, f2) ));
+		P("size = " << s2.size() << verif(s2.size() == f2.size()) );
+	}
+	{
+		ft::multiset<std::string>	 f2(f.begin(), f.end());
+		std::multiset<std::string>	 s2(s.begin(), s.end());
+		P("Same container" << verif( compare_container(f2, f) ));
+		// show_container(f2);
+		// show_container(f);
+
+		P("size = " << f2.size() << verif(f.size() == f2.size()) );
+	}
+	P("---------> Operator= <----");
+	{
+		ft::multiset<std::string>	 f2 = f;
+		std::multiset<std::string>	 s2 = s;
+		P("Same container" << verif( compare_container(s2, f2) ));
+		P("size = " << s2.size() << verif(s2.size() == f2.size()) );
+	}
+	P("---------> Count <----");
+	P(verif( (s.count("one") == f.count("one") && s.count("lol") == f.count("lol"))  ));
+	
+	P("---------> Equal_Range <----");
+	{
+		std::pair<std::multiset< std::string>::iterator, std::multiset< std::string>::iterator> si;
+		ft::pair<ft::multiset< std::string>::iterator, ft::multiset< std::string>::iterator> fi; 
+
+		si = s.equal_range("three");
+		fi = f.equal_range("three");
+
+		P(verif( ( *(si.first) == *(fi.first) && *(si.second) == *(fi.second))  ));
+	}
+	P("---------> Lower_Bound <----");
+	{
+		std::multiset< std::string>::iterator si;
+		ft::multiset< std::string>::iterator fi;
+
+		si = s.lower_bound("three");
+		fi = f.lower_bound("three");
+
+		P(verif( (*si == *fi)  ));
+	}
+	P("---------> Upper_Bound <----");
+	{
+		std::multiset< std::string>::iterator si;
+		ft::multiset< std::string>::iterator fi;
+
+		si = s.upper_bound("three");
+		fi = f.upper_bound("three");
+
+		P(verif( (*si == *fi)  ));
+	}
+	P("---------> Value_Comp <----");
+	{
+		std::multiset< std::string>::iterator si = s.begin();
+		ft::multiset< std::string>::iterator fi = f.begin();
+
+		P( verif( (s.value_comp()(*si, *++si) == f.value_comp()(*fi, *++fi)) ));
+	}
+
+	P("---------> erase <----");
+	{
+		std::multiset< std::string>::iterator si = s.begin();
+		ft::multiset< std::string>::iterator fi = f.begin();
+		s.erase(si++);
+		f.erase(fi++);
+		si++;
+		fi++;
+
+		std::multiset< std::string>::iterator si2 = s.begin();
+		ft::multiset< std::string>::iterator fi2 = f.begin();
+		s.erase(*si2 );
+		f.erase(*fi2 );
+
+		si2 = s.begin();
+		fi2 = f.begin();
+
+		f.erase(fi2, fi);
+		s.erase(si2, si);
+		P(verif( compare_container(s, f) ));
+	}
+	P("---------> swap  <----");
+	{
+		ft::multiset< std::string>	 f3;
+		std::multiset< std::string>	 s3;
+		s.swap(s3);
+		f.swap(f3);
+		P(verif(compare_container(s, f)));
+		P(verif(compare_container(s3, f3)));
+
+		swap(s, s3);
+		swap(f, f3);
+	}
+	P("---------> reverse_iterator <----");
+	{
+		ft::multiset< std::string>::reverse_iterator fi3 = f.rbegin();
+		std::multiset< std::string>::reverse_iterator si3 = s.rbegin();
+		bool good = true;
+		for (; si3 != s.rend(); si3++)
+		{
+			if (*si3 != *fi3)
+				good = false;
+			fi3++;
+		}
+		verif(good);
+	}
+	P("---------> clear <----");
+	ft::multiset< std::string>	f2(f);
+	std::multiset< std::string>	s2(s);
+	
+	f.clear();
+	s.clear();
+	P("empty ? " << s.empty() << verif(s.empty() == f.empty()) );
+	P("size = " << s.size() << verif(s.size() == f.size()) );
+
+	P("---------> operator == <----");
+	P("operator '==' : " << (s == s2) << verif((s == s2) == (f == f2)));
+
+	P("---------> operator != <----");
+	P("operator '!=' : " << (s != s2) << verif((s != s2) == (f != f2)));
+
+	P("---------> operator < <----");
+	P("operator '<' : " << (s < s2) << verif((s < s2) == (f < f2)));
+
+	P("---------> operator <= <----");
+	P("operator '<=' : " << (s <= s2) << verif((s <= s2) == (f <= f2)));
+
+	P("---------> operator > <----");
+	P("operator '>' : " << (s > s2) << verif((s > s2) == (f > f2)));
+
+	P("---------> operator >= <----");
+	P("operator '>=' : " << (s >= s2) << verif((s >= s2) == (f >= f2)));
+}
+
 int main(void)
 {
 	// t_stack();
@@ -725,6 +1063,8 @@ int main(void)
 	// t_list();
 	// t_vector();
 	// t_map();
-	system("leaks a.out");
+	// t_set();
+	t_multiset();
+	// system("leaks a.out");
 	return (0);
 }

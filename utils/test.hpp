@@ -164,7 +164,7 @@ void map_constructor_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		ad.insert(std::pair<int, int>(i, i*i));
+		ad.insert(ft::pair<const int, int>(i, i*i));
 		bd.insert(std::pair<int, int>(i, i*i));
 	}
 
@@ -301,7 +301,7 @@ void map_clear_empty_t(T const& t, K const& k)
 	{
 		if (a.empty() != b.empty())
 			verif = false;
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	// P("~~~~~~~~ Clear ~~~~~~~~~~");	
@@ -341,7 +341,7 @@ void map_count_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	// P("~~~~~~~~ Count ~~~~~~~~~~");	
@@ -358,10 +358,10 @@ void map_equal_range_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
-	std::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> a1 = a.equal_range(2);
+	ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> a1 = a.equal_range(2);
 	std::pair<std::map<int, int>::iterator, std::map<int, int>::iterator> b1 = b.equal_range(2);
 
 	// P("~~~~~~~~ Equal_Range ~~~~~~~~~~");	
@@ -480,7 +480,7 @@ void map_erase_t(T const& t, K const& k)
 	{
 		for (size_t i = 0; i < 10; i++)
 		{
-			a.insert(std::pair<int, int>(i, i*i));
+			a.insert(ft::pair<const int, int>(i, i*i));
 			b.insert(std::pair<int, int>(i, i*i));
 		}
 		it = a.begin();
@@ -533,7 +533,7 @@ void map_find_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	// P("~~~~~~~~ Find ~~~~~~~~~~");	
@@ -586,7 +586,7 @@ void insert_t(T const& t, K const& k)
 	T a;
 	K b;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	typename T::iterator it2;
 	typename K::iterator ik2;
@@ -684,7 +684,7 @@ void map_insert_t(T const& t, K const& k)
 	T a;
 	K b;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	typename T::iterator it;
 	typename K::iterator ik;
@@ -699,7 +699,7 @@ void map_insert_t(T const& t, K const& k)
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			std::pair<typename T::iterator, bool> aret = a.insert(std::pair<int, int>(i, i*i));
+			ft::pair<typename T::iterator, bool> aret = a.insert(ft::pair<const int, int>(i, i*i));
 			std::pair<typename K::iterator, bool> bret = b.insert(std::pair<int, int>(i, i*i));
 
 			if (aret.first->first != bret.first->first 
@@ -710,7 +710,7 @@ void map_insert_t(T const& t, K const& k)
 
 		for (int i = 0; i < 10; i++)
 		{
-			std::pair<typename T::iterator, bool> aret = a.insert(std::pair<int, int>(i, i*i));
+			ft::pair<typename T::iterator, bool> aret = a.insert(ft::pair<const int, int>(i, i*i));
 			std::pair<typename K::iterator, bool> bret = b.insert(std::pair<int, int>(i, i*i));
 
 			if (aret.first->first != bret.first->first 
@@ -726,12 +726,12 @@ void map_insert_t(T const& t, K const& k)
 		verif = true;
 		for (int i = 0; i < 10; i++)
 		{
-			a.insert(std::pair<int, int>(i, i*i));
+			a.insert(ft::pair<const int, int>(i, i*i));
 			b.insert(std::pair<int, int>(i, i*i));
 		}
 		for (int i = 0; i < 15; i++)
 		{
-			typename T::iterator aret = a.insert(a.begin(), std::pair<int, int>(i, i*i));
+			typename T::iterator aret = a.insert(a.begin(), ft::pair<const int, int>(i, i*i));
 			typename K::iterator bret = b.insert(b.begin(), std::pair<int, int>(i, i*i));
 
 			if (aret->first != bret->first 
@@ -747,7 +747,7 @@ void map_insert_t(T const& t, K const& k)
 		K b1;
 		for (int i = 0; i < 20; i++)
 		{
-			a.insert(std::pair<int, int>(i, i*i));
+			a.insert(ft::pair<const int, int>(i, i*i));
 			b.insert(std::pair<int, int>(i, i*i));
 		}
 		it = a.begin();
@@ -781,7 +781,7 @@ void map_key_comp_t(T const& t, K const& k)
 	typename T::key_compare a_comp = a.key_comp();
 	typename K::key_compare b_comp = b.key_comp();
 
-	a.insert(std::pair<int, int>(12, -12*15));
+	a.insert(ft::pair<const int, int>(12, -12*15));
 	b.insert(std::pair<int, int>(12, -12*15));
 	
 	typename T::iterator at = a.begin();
@@ -801,7 +801,7 @@ void map_lower_bound_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	// P("~~~~~~~~ Lower_Bound ~~~~~~~~~~");	
@@ -819,7 +819,7 @@ void merge_t(T const& t, K const& k)
 	T a1;
 	K b;
 	K b1;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	typename T::iterator it2;
 	typename K::iterator ik2;
@@ -862,7 +862,7 @@ void operator_equal_t(T const& t, K const& k)
 {
 	(void)t;
 	(void)k;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -892,7 +892,7 @@ void map_operator_equal_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 
@@ -913,7 +913,7 @@ void pop_back_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -944,7 +944,7 @@ void queue_pop_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -973,7 +973,7 @@ void stack_pop_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1002,7 +1002,7 @@ void pop_front_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1033,7 +1033,7 @@ void push_back_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1057,7 +1057,7 @@ void push_front_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1082,7 +1082,7 @@ void queue_push_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1104,7 +1104,7 @@ void stack_push_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1126,7 +1126,7 @@ void remove_t(T const& t, K const& k)
 {
 	(void)t;
 	(void)k;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1155,7 +1155,7 @@ void remove_if_t(T const& t, K const& k)
 {
 	(void)t;
 	(void)k;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1185,7 +1185,7 @@ void re_size_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1208,7 +1208,7 @@ void reverse_t(T const& t, K const& k)
 {
 	(void)t;
 	(void)k;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	T a;
 	K b;
@@ -1241,7 +1241,7 @@ void map_size_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 		if (a.size() != b.size())
 			verif = false;
@@ -1278,7 +1278,7 @@ void splice_t(T const& t, K const& k)
 	T a1;
 	K b;
 	K b1;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::iterator it;
 	typename T::iterator it2;
 	typename T::iterator it3;
@@ -1390,7 +1390,7 @@ void swap_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	{
 	T a;
 	K b;
@@ -1449,7 +1449,7 @@ void map_swap_t(T const& t, K const& k)
 	(void)t;
 	(void)k;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	{
 		T a;
 		K b;
@@ -1460,7 +1460,7 @@ void map_swap_t(T const& t, K const& k)
 		for (int i = 0; i < 20; i++)
 		{
 			r = rand() % 100 + 1;
-			a.insert(std::pair<int, int>(r, i));
+			a.insert(ft::pair<const int, int>(r, i));
 			b.insert(std::pair<int, int>(r, i));
 			a.swap(a1);
 			b.swap(b1);
@@ -1479,7 +1479,7 @@ void map_swap_t(T const& t, K const& k)
 		
 		check(verif, "Function Swap- Internal");
 	}
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	{
 		T a;
 		K b;
@@ -1491,7 +1491,7 @@ void map_swap_t(T const& t, K const& k)
 		for (int i = 0; i < 20; i++)
 		{
 			r = rand() % 100 + 1;
-			a.insert(std::pair<int, int>(r, i));
+			a.insert(ft::pair<const int, int>(r, i));
 			b.insert(std::pair<int, int>(r, i));
 			swap(a, a1);
 			swap(b, b1);
@@ -1514,7 +1514,7 @@ void sort_t(T const& t, K const& k)
 	(void)k;
 	T a;
 	K b;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	typename T::iterator it2;
 	typename K::iterator ik2;
@@ -1574,7 +1574,7 @@ void unique_t(T const& t, K const& k)
 {
 	(void)t;
 	(void)k;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 
 	// P("~~~~~~~~ Unique ~~~~~~~~~~");	
 	T a;
@@ -1619,7 +1619,7 @@ void map_upper_bound_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	// P("~~~~~~~~ Upper_Bound ~~~~~~~~~~");	
@@ -1637,7 +1637,7 @@ void map_value_comp_t(T const& t, K const& k)
 
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	typename T::iterator it = a.begin();
@@ -1661,7 +1661,7 @@ void iterator_t(T const& t, K const& k)
 	K b;
 	int r;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::iterator it;
 	typename K::iterator ik;
 	
@@ -1696,7 +1696,7 @@ void r_iterator_t(T const& t, K const& k)
 	K b;
 	int r;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::reverse_iterator it;
 	typename K::reverse_iterator ik;
 	
@@ -1732,7 +1732,7 @@ void comp_t(T const& t, K const& k)
 	K b;
 	K b1;
 	int r;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::reverse_iterator it;
 	typename K::reverse_iterator ik;
 	
@@ -1760,7 +1760,7 @@ void queue_comp_t(T const& t, K const& k)
 	K b;
 	K b1;
 	int r;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	for (size_t i = 0; i < 100; i++)
 	{
 		r = rand();
@@ -1783,7 +1783,7 @@ void iterator_comp_t_ra(T const& t, K const& k)
 	T a;
 	K b;
 	int r;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::iterator it = a.begin();
 	typename T::iterator it2(it);
 	typename K::iterator ik = b.begin();
@@ -1823,7 +1823,7 @@ void iterator_comp_t_bd(T const& t, K const& k)
 	T a;
 	K b;
 	int r;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::iterator it = a.begin();
 	typename T::iterator it2(it);
 	typename K::iterator ik = b.begin();
@@ -1859,7 +1859,7 @@ void r_iterator_comp_t_ra(T const& t, K const& k)
 	T a;
 	K b;
 	int r;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::reverse_iterator it = a.rbegin();
 	typename T::reverse_iterator it2(it);
 	typename K::reverse_iterator ik = b.rbegin();
@@ -1899,7 +1899,7 @@ void r_iterator_comp_t_bd(T const& t, K const& k)
 	T a;
 	K b;
 	int r;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::reverse_iterator it = a.rbegin();
 	typename T::reverse_iterator it2(it);
 	typename K::reverse_iterator ik = b.rbegin();
@@ -1937,13 +1937,13 @@ void map_iterator_t(T const& t, K const& k)
 	K b;
 	int r;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::iterator it;
 	typename K::iterator ik;
 	
 	for (int i = 0; i < 20; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	for (size_t i = 0; i < 20; i++)
@@ -1956,7 +1956,7 @@ void map_iterator_t(T const& t, K const& k)
 			it++;
 			ik++;
 		}
-		if (*it != *ik)
+		if (it->first != ik->first || it->second != ik->second)
 			verif = false;
 	}
 	check(verif, "Iterator Check");
@@ -1971,13 +1971,13 @@ void map_r_iterator_t(T const& t, K const& k)
 	K b;
 	int r;
 	bool verif = true;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	typename T::reverse_iterator it;
 	typename K::reverse_iterator ik;
 	
 	for (int i = 0; i < 20; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	for (size_t i = 0; i < 20; i++)
@@ -1990,7 +1990,7 @@ void map_r_iterator_t(T const& t, K const& k)
 			it++;
 			ik++;
 		}
-		if (*it != *ik)
+		if (it->first != ik->first || it->second != ik->second)
 			verif = false;
 	}
 	check(verif, "Reverse Iterator Check");
@@ -2008,7 +2008,7 @@ void map_comp_t(T const& t, K const& k)
 	K b1;
 	for (int i = 0; i < 10; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 	check(((a == a1) == (b == b1)) , "Operator == ");
@@ -2026,11 +2026,11 @@ void map_iterator_comp_t_bd(T const& t, K const& k)
 	(void)k;
 	T a;
 	K b;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	for (int i = 0; i < 20; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 
@@ -2059,11 +2059,11 @@ void map_r_iterator_comp_t_bd(T const& t, K const& k)
 	(void)k;
 	T a;
 	K b;
-	std::srand(std::time(nullptr));
+	std::srand(std::time(NULL));
 	
 	for (int i = 0; i < 20; i++)
 	{
-		a.insert(std::pair<int, int>(i, i*i));
+		a.insert(ft::pair<const int, int>(i, i*i));
 		b.insert(std::pair<int, int>(i, i*i));
 	}
 

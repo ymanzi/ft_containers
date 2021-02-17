@@ -63,7 +63,6 @@ namespace ft
 			typedef const value_type&			const_reference;
 			typedef value_type*					pointer;
 			typedef const value_type*			const_pointer;
-			typedef ptrdiff_t					difference_type;
 			typedef size_t						size_type;
 
 			typedef Vector::iterator<value_type>			iterator;
@@ -79,7 +78,7 @@ namespace ft
 			explicit vector(void): _size(0) { init_vector();} // default constructor
 			explicit vector (size_type n, const value_type& val = value_type()) { init_vector(n, val); _size = n;} // fill constructor
 			template <class InputIterator>
-			vector (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = nullptr) { init_vector(); _size = 0; while (first != last) this->push_back(*first++); } // range constructor
+			vector (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_iterator<InputIterator>::value, char>::type = char() ) { init_vector(); _size = 0; while (first != last) this->push_back(*first++); } // range constructor
 			vector (const vector& x)
 			{
 				init_vector(); _size = 0;
@@ -88,7 +87,7 @@ namespace ft
 			} // Copy constructor
 
 			template <class InputIterator>
-  			void 				assign (InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = nullptr) // range
+  			void 				assign (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_iterator<InputIterator>::value, char>::type = char() ) // range
 			{
 				_size = 0;
 				while (first != last)
@@ -171,7 +170,7 @@ namespace ft
 			}
 
 			template <class InputIterator>
-    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!std::is_reference<InputIterator>::value, std::nullptr_t>::type = nullptr)  // range
+    		void 				insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<ft::is_iterator<InputIterator>::value, char>::type = char() )  // range
 			{
 				size_t tmp_size = 0;
 				InputIterator tmp(first);

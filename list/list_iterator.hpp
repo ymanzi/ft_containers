@@ -28,6 +28,7 @@ namespace List
 
 			t_list	*_list;
 		public:
+			typedef char	var;
 			iterator(void): _list(NULL) {}
 			iterator(void* p_list): _list(static_cast<t_list *>(p_list)) {} // compilation error if the cast fails
 			iterator(const iterator<T>& oth) { *this = oth;}

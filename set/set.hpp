@@ -1,50 +1,50 @@
-#	ifndef MAP_HPP
-#	define MAP_HPP
+#	ifndef SET_HPP
+#	define SET_HPP
 
 #include <iostream>
 #include <limits>
 #include "../utils/ft_utils.hpp"
-#include "map_iterator.hpp"
+#include "set_iterator.hpp"
 
 namespace ft
 {
-	template < class Key, class T, class Compare = ft::less<Key> >
-	class map
+	template < class T, class Compare = ft::less<T> >
+	class set
 	{
 		private:
-			typedef	struct	s_map
+			typedef	struct	s_set
 			{
-				struct s_map			*prev;
-				struct s_map			*next;
-				pair<Key, T>	*value;
-			}				t_map;
+				struct s_set			*prev;
+				struct s_set			*next;
+				T						*value;
+			}				t_set;
 
 			size_t	_size;
-			t_map	*_map;
+			t_set	*_set;
 
-			void	init_map()
+			void	init_set()
 			{ 
 				_size = 0;
-				_map = new t_map;
-				_map->next = NULL;
-				_map->prev = NULL;
-				_map->value = new ft::pair<Key, T>();
-			}		
+				_set = new t_set;
+				_set->next = NULL;
+				_set->prev = NULL;
+				_set->value = new T;
+			}
+
 		public:
-			typedef	ft::pair<Key, T>		value_type;
+			typedef	T							value_type;
 			typedef value_type&					reference;
 			typedef const value_type&			const_reference;
 			typedef value_type*					pointer;
 			typedef const value_type*			const_pointer;
 			typedef size_t						size_type;
-			typedef Key							key_type;
-			typedef T							mapped_type;
+			typedef T							key_type;
 			typedef Compare						key_compare;
 
-			typedef Map::iterator<key_type, mapped_type>				iterator;
-			typedef const Map::iterator<key_type, mapped_type>			const_iterator;
-			typedef Map::reverse_iterator<key_type, mapped_type>		reverse_iterator;
-			typedef const Map::reverse_iterator<key_type, mapped_type>	const_reverse_iterator;
+			typedef Set::iterator<key_type>					iterator;
+			typedef const Set::iterator<key_type>			const_iterator;
+			typedef Set::reverse_iterator<key_type>			reverse_iterator;
+			typedef const Set::reverse_iterator<key_type>	const_reverse_iterator;
 			
 			class value_compare//: public std::binary_function<value_type,value_type,bool>
 			{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
@@ -52,44 +52,44 @@ namespace ft
 					Compare comp;
 					
 				public:
-					value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+					value_compare (Compare c) : comp(c) {}  // constructed with set's comparison object
 					typedef bool result_type;
 					typedef value_type first_argument_type;
 					typedef value_type second_argument_type;
 					bool operator() (const value_type& x, const value_type& y) const
 					{
-						return comp(x.first, y.first);
+						return comp(x, y);
 					}
 			};
 			
-			explicit map(void): _size(0), _map(NULL) { init_map();} // default constructor
+			explicit set(void): _size(0), _set(NULL) { init_set();} // default constructor
 			template <class InputIterator>
-			map (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_iterator<InputIterator>::value, char>::type = char()): _size(0) { init_map(); while (first != last) this->insert(*first++); } // range constructor
-			map (const map& x): _size(0) { init_map(); *this = x;} // Copy constructor
-			virtual ~map()
+			set (InputIterator first, InputIterator last, typename ft::enable_if<ft::is_iterator<InputIterator>::value, char>::type = char()): _size(0) { init_set(); while (first != last) this->insert(*first++); } // range constructor
+			set (const set& x): _size(0) { init_set(); *this = x;} // Copy constructor
+			virtual ~set()
 			{
-				t_map *elem;
+				t_set *elem;
 				
-				while(_map)
+				while(_set)
 				{
-					elem = _map->next;
-					delete _map->value;
-					delete _map;
-					_map = elem;
+					elem = _set->next;
+					delete _set->value;
+					delete _set;
+					_set = elem;
 				}
 			}
 
-			iterator			begin(){ return (iterator(_map));}
-			const_iterator		begin() const { return (const_iterator(_map));}
+			iterator			begin(){ return (iterator(_set));}
+			const_iterator		begin() const { return (const_iterator(_set));}
 			void 				clear(){ this->erase(this->begin(), this->end());}
 			size_type count (const key_type& k) const
 			{
-				t_map		*elem;
+				t_set		*elem;
 
-				elem = _map;
+				elem = _set;
 				while (elem->next)
 				{
-					if (elem->value->first == k)
+					if (*(elem->value) == k)
 						return (1);
 					elem = elem->next;
 				}
@@ -99,9 +99,9 @@ namespace ft
 			bool				empty() const {if (_size) return (false); return (true);}
 			iterator			end()
 			{
-				t_map	*elem;
+				t_set	*elem;
 
-				elem = _map;
+				elem = _set;
 				while (elem->next)
 					elem = elem->next;
 				return (iterator(elem));
@@ -109,9 +109,9 @@ namespace ft
 
 			const_iterator		end() const
 			{
-				t_map	*elem;
+				t_set	*elem;
 
-				elem = _map;
+				elem = _set;
 				while (elem->next)
 					elem = elem->next;
 				return (const_iterator(elem));
@@ -124,7 +124,7 @@ namespace ft
 				
 				for ( ; it2 != end(); it2++)
 				{
-					if (it2->first == k)
+					if (*it2 == k)
 						break ;
 				}
 				it = it2++;
@@ -139,7 +139,7 @@ namespace ft
 				
 				for ( ; it2 != end(); it2++)
 				{
-					if (key_comp()(it2->first, k) ==  key_comp()(k, it2->first))
+					if (key_comp()(*it2, k) ==  key_comp()(k, *it2))
 					{
 						found = true;
 						break ;
@@ -154,19 +154,19 @@ namespace ft
 
 			size_type	erase (const key_type& k)
 			{
-				t_map	*elem = _map;
-				t_map	*prev = NULL;
-				t_map	*next = NULL;
+				t_set	*elem = _set;
+				t_set	*prev = NULL;
+				t_set	*next = NULL;
 
 				while (elem->next)
 				{
-					if (elem->value->first == k)
+					if (*(elem->value) == k)
 					{
 						_size--;
 						next = elem->next;
 						if (prev == NULL)
 						{
-							_map = next;
+							_set = next;
 							delete elem->value;
 							delete elem;
 						}
@@ -187,7 +187,7 @@ namespace ft
 
 			void		erase (iterator it)
 			{
-				this->erase(it->first);
+				this->erase(*it);
 			}
 
 			void 		erase (iterator first, iterator last)
@@ -204,7 +204,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (it->first == k)
+					if (*it == k)
 						return (it);
 				}
 				return (this->end());
@@ -214,7 +214,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (it->value->first == k)
+					if (*it == k)
 						return (const_iterator(it));
 				}
 				return (const_iterator(this->end()));
@@ -229,27 +229,27 @@ namespace ft
 
 			ft::pair<iterator, bool>	insert (const value_type& val)	// fill
 			{
-				t_map	*n;
-				t_map	*prev = NULL;
-				t_map	*elem = this->_map;
+				t_set	*n;
+				t_set	*prev = NULL;
+				t_set	*elem = this->_set;
 				
-				while (elem->next && Compare()(elem->value->first, val.first) && Compare()(val.first, elem->value->first) != Compare()(elem->value->first, val.first))
+				while (elem->next && Compare()(*(elem->value), val) && Compare()(val, *(elem->value)) != Compare()(*(elem->value), val))
 				{
 					prev = elem;
 					elem = elem->next;
 				}
-				if (elem->next && Compare()(val.first, elem->value->first) == Compare()(elem->value->first, val.first))
+				if (elem->next && Compare()(val, *(elem->value)) == Compare()(*(elem->value), val))
 					return  ft::pair<iterator, bool>(iterator(elem), false);
 				else
 				{
 					_size++;
-					n = new t_map;
+					n = new t_set;
 					n->value = new value_type(val);
 					elem->prev = n;
 					n->next = elem;
 					n->prev = NULL;
 					if (prev == NULL)
-						_map = n;
+						_set = n;
 					else
 					{
 						prev->next = n;
@@ -275,7 +275,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (!key_compare()(it->first, k))
+					if (!key_compare()(*it, k))
 						return (it);
 				}
 				return this->end();
@@ -285,61 +285,37 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (!key_compare(it->first, k))
+					if (!key_compare(*it, k))
 						return (it);
 				}
 				return this->end();
 			}
 
-			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(t_map) );}
+			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(t_set) );}
 		
-			map& 				operator= (const map& oth)
+			set& 				operator= (const set& oth)
 			{
 				this->clear();
 				for (iterator it = oth.begin(); it != oth.end(); it++ )
 					this->insert(*it);
 				return (*this);
 			}
-			
-			mapped_type& operator[] (const key_type& k)
-			{
-				iterator it = this->begin();
-				for ( ; it != this->end(); it++)
-				{
-					if ((*it).first == k)
-						return (*it).second;
-				}
-				value_type buf(k, mapped_type());
-				this->insert(buf);
-				t_map *tmp = _map;
-				mapped_type *p = &(tmp->value->second);
-				while (tmp->next)
-				{
-					if (tmp->value->first == k)
-					{
-						p = &(tmp->value->second);
-						break ;
-					}
-					tmp = tmp->next;
-				}
-				return *p;
-			}
 
-			reverse_iterator	rbegin(){ iterator it = end(); return reverse_iterator((--it).get_map() );}
-			const_reverse_iterator	rbegin() const {iterator it = end(); return const_reverse_iterator((--it).get_map() );}
+			reverse_iterator	rbegin(){ iterator it = end(); return reverse_iterator((--it).get_set() );}
+			const_reverse_iterator	rbegin() const {iterator it = end(); return const_reverse_iterator((--it).get_set() );}
 			
-			reverse_iterator 	rend(){return reverse_iterator(end().get_map());}
-			const_reverse_iterator rend() const { return const_reverse_iterator(this->end().get_map());}
+			reverse_iterator 	rend(){return reverse_iterator(end().get_set());}
+			const_reverse_iterator rend() const { return const_reverse_iterator(this->end().get_set());}
 			
 			size_type			size() const {return _size;}
 			
-			void				swap (map& x) {map n(*this);   *this = x; x = n;}
+			void				swap (set& x) {set n(*this);   *this = x; x = n;}
 
 			iterator upper_bound (const key_type& k)
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (!key_compare()(it->first, k) && it->first != k)
+					if (!key_compare()(*it, k) && *it != k)
 						return (it);
 				}
 				return this->end();
@@ -349,7 +325,7 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); it++)
 				{
-					if (!key_compare()(it->first, k) && it->first != k)
+					if (!key_compare()(*it, k) && *it != k)
 						return (it);
 				}
 				return this->end();
@@ -364,17 +340,17 @@ namespace ft
 	};
 
 	//relational operators
-	template < class Key, class T>
-	bool	operator== (const map<Key, T>& lhs, const map<Key, T>& rhs)
+	template <class T>
+	bool	operator== (const ft::set<T>& lhs, const ft::set<T>& rhs)
 	{
-		Map::iterator<Key, T>	it_l = lhs.begin();
-		Map::iterator<Key, T>	it_r = rhs.begin();
+		Set::iterator<T>	it_l = lhs.begin();
+		Set::iterator<T>	it_r = rhs.begin();
 
 		if (lhs.size() != rhs.size())
 			return (false);
 		while (it_l != lhs.end() && it_r != rhs.end())
 		{
-			if (it_l->first != it_r->first || it_l->second != it_r->second)
+			if (*it_l != *it_r)
 				return (false);
 			++it_l;
 			++it_r;
@@ -382,38 +358,38 @@ namespace ft
 		return (true);
 	}
 
-	template < class Key, class T>
-	bool	operator!= (const map<Key, T>& lhs, const map<Key, T>& rhs)
+	template <class T>
+	bool	operator!= (const ft::set<T>& lhs, const ft::set<T>& rhs)
 	{
 		return (!(lhs == rhs));
 	}
 
-	template < class Key, class T>
-	bool	operator< (const map<Key, T>& lhs, const map<Key, T>& rhs)
+	template <class T>
+	bool	operator< (const ft::set<T>& lhs, const ft::set<T>& rhs)
 	{
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
-	template < class Key, class T>
-	bool	operator<= (const map<Key, T>& lhs, const map<Key, T>& rhs)
+	template <class T>
+	bool	operator<= (const ft::set<T>& lhs, const ft::set<T>& rhs)
 	{
 		return (!(rhs < lhs));
 	}
 
-	template < class Key, class T>
-	bool	operator> (const map<Key, T>& lhs, const map<Key, T>& rhs)
+	template <class T>
+	bool	operator> (const ft::set<T>& lhs, const ft::set<T>& rhs)
 	{
 		return (rhs < lhs);
 	}
 
-	template < class Key, class T>
-	bool	operator>= (const map<Key, T>& lhs, const map<Key, T>& rhs)
+	template <class T>
+	bool	operator>= (const ft::set<T>& lhs, const ft::set<T>& rhs)
 	{
 		return (!(lhs < rhs));
 	}
 
-	template < class Key, class T>
-	void	swap (map<Key, T>& x, map<Key, T>& y) {x.swap(y);}
-}
+	template <class T>
+	void	swap (ft::set<T>& x, ft::set<T>& y) {x.swap(y);}
+};
 
 #	endif
