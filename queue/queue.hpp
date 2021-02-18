@@ -2,6 +2,7 @@
 #	define QUEUE_HPP
 
 #include <iostream>
+#include "../deque/deque.hpp"
 #include "../main_header.hpp"
 
 namespace ft 

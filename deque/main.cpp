@@ -1458,15 +1458,7 @@ void t_deque(void)
 
 int main(void)
 {
-	// t_stack();
-	// t_queue();
-	// t_list();
-	// t_vector();
-	// t_map();
-	// t_set();
-	// t_multiset();
-	// t_multimap();
-	// t_deque();
+	t_deque();
 	// system("leaks a.out");
 	return (0);
 }
