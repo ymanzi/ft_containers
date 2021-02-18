@@ -31,19 +31,19 @@ namespace Vector
 			bool		operator> (const iterator<T>& oth) const {return (_vector > oth._vector);}
 			bool		operator>= (const iterator<T>& oth) const {return (_vector >= oth._vector);}
 
-			iterator&	operator++ ()  // equal to ++var
+			iterator&	operator++()  // equal to ++var
 			{
 				_vector++;
 				return (*this);
 			}
-			iterator	operator+ (const size_t n) // equal to ++var
+			iterator	operator+ (const size_t n)
 			{
 				iterator<T> tmp(*this);
 				for (size_t i = 0; i < n; i++)
 					tmp.operator++();
 				return (tmp);
 			}
-			iterator	operator- (const size_t n) // equal to ++var
+			iterator	operator- (const size_t n) 
 			{
 				iterator<T>	tmp(*this);
 				for (size_t i = 0; i < n; i++)
@@ -99,7 +99,7 @@ namespace Vector
 			reverse_iterator(void* p_vector): iterator<T>(p_vector) {} // compilation error if the cast fails
 			reverse_iterator(const reverse_iterator<T>& oth): iterator<T>() { *this = oth;}
 			virtual ~reverse_iterator(void) {}
-			reverse_iterator&	operator= (const iterator<T>& oth)
+			reverse_iterator&	operator= (const reverse_iterator<T>& oth)
 			{
 				this->_vector = oth._vector;
 				return (*this);
@@ -113,6 +113,13 @@ namespace Vector
 				for (size_t i = 0; i < n; i++)
 					operator--();
 				return (*this);
+			}
+			T&	operator[] (const size_t n) // equal to ++var
+			{
+				reverse_iterator tmp(*this);
+				for (size_t i = 0; i < n; i++)
+					tmp.operator++();
+				return (*tmp);
 			}
 			reverse_iterator&	operator+= (const size_t n) // equal to ++var
 			{
@@ -134,8 +141,6 @@ namespace Vector
 					operator--();
 				return (tmp);
 			}
-
-
 	};
 }
 

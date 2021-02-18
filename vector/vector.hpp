@@ -96,7 +96,7 @@ namespace ft
 			
 			void assign (size_type n, const value_type& val) { this->resize(n); for (size_t i = 0; i < n; i++) (*this)[i] = val; } //Fill
 			reference at (size_type n) { if (n >= _size) throw std::out_of_range("vector::_M_range_check"); return _vector[n];}
-			const_reference at (size_type n) const {return (const_cast<const_reference>(at(n)));}
+			const_reference at (size_type n) const { if (n >= _size) throw std::out_of_range("vector::_M_range_check"); return _vector[n];}
 			
 			reference 			back()
 			{

@@ -2,12 +2,11 @@
 #	define QUEUE_HPP
 
 #include <iostream>
-#include <deque>
 #include "../main_header.hpp"
 
 namespace ft 
 {
-	template <class T, class Container = std::deque<T> >
+	template <class T, class Container = ft::deque<T> >
 	class queue
 	{
 		private:

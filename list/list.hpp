@@ -100,11 +100,6 @@ namespace ft
 				return (elem);
 			}
 
-			// template<bool B>
-			// struct enable_if {};
-
-			// struct enable_if<true, T> { typedef T type; };
-
 		public:
 			typedef	T							value_type;
 			typedef value_type&					reference;

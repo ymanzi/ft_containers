@@ -15,8 +15,10 @@
 #include <set>
 #include "set/set.hpp"
 #include "multiset/multiset.hpp"
-
+#include "multimap/multimap.hpp"
 #include <deque>
+#include "deque/deque.hpp"
+
 #define P(x) std::cout << std::boolalpha << x << std::endl
 
 #	endif
