@@ -296,7 +296,7 @@ namespace ft
 				return this->end();
 			}
 
-			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(t_multiset) );}
+			size_type 			max_size() const { return (std::numeric_limits<unsigned long long>::max() / sizeof(t_multiset) );}
 		
 			multiset& 				operator= (const multiset& oth)
 			{

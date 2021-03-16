@@ -185,7 +185,7 @@ namespace ft
 				while (first++ != last)
 					position = insert(position, v[tmp_size++]);
 			}
-			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(T));}
+			size_type 			max_size() const { return (std::numeric_limits<unsigned long long>::max() / sizeof(T));}
 
 			vector& 				operator= (const vector& oth)
 			{

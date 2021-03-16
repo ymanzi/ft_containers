@@ -3,6 +3,19 @@
 #include <string>
 
 #define P(x) std::cout << std::boolalpha << x << std::endl
+#define RED "\e[0;31m"
+#define GRN "\e[0;32m"
+#define NC "\e[0m"
+
+template <class T>
+std::string verif(T elem)
+{
+	std::string value;
+	if (elem)
+		return (" Verif: " GRN " [O.K]" NC);
+	else
+		return (" Verif: " RED " [K.0]" NC);
+}
 
 template< class T>
 void	show_container(T& l)
@@ -58,16 +71,6 @@ bool	compare_map(T & t, K & k)
 		jt++;
 	}
 	return (true);
-}
-
-std::string verif(bool elem)
-{
-	std::string value;
-	if (elem)
-		value = "1";
-	else
-		value = "0";
-	return (" Verif: " + value);
 }
 
 void t_multiset(void)
@@ -259,5 +262,6 @@ int main(void)
 {
 	t_multiset();
 	// system("leaks a.out");
+
 	return (0);
 }

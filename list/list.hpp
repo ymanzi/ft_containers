@@ -245,7 +245,7 @@ namespace ft
 					++first;
 				}
 			}
-			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(t_list) );}
+			size_type 			max_size() const { return (std::numeric_limits<unsigned long long>::max() / sizeof(t_list) );}
 			void				merge (list& x)
 			{
 				if ( *this != x)

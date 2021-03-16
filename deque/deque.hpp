@@ -248,7 +248,7 @@ namespace ft
 					++first;
 				}
 			}
-			size_type 			max_size() const { return (std::numeric_limits<char>::max() / sizeof(t_deque) );}
+			size_type 			max_size() const { return (std::numeric_limits<unsigned long long>::max() / sizeof(t_deque) );}
 			deque& 				operator= (const deque& oth)
 			{
 				this->clear();
